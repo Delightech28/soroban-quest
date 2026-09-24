@@ -404,6 +404,22 @@
       "missionItemLocked": "Misión {{order}}: {{title}}, bloqueada"
     }
   },
+  "recommendation": {
+    "title": "Recomendado para ti",
+    "badge": "Recomendado",
+    "startMission": "Comenzar misión",
+    "difficulty": "Dificultad:",
+    "xp": "{{xp}} XP",
+    "reasons": {
+      "struggledTopic": "Recomendado porque \"{{missionTitle}}\" fue un desafío — practica para reforzar tus habilidades.",
+      "struggledChapter": "Refuerza los conceptos básicos del Capítulo {{chapter}} tras varios intentos.",
+      "fastLearner": "¡Avanzas muy rápido! Atrévete con este desafío {{difficulty}}.",
+      "unexploredChapter": "¿Listo para algo nuevo? Explora el Capítulo {{chapter}}.",
+      "nextCampaign": "Continúa tu aventura con la siguiente misión de tu campaña.",
+      "gettingStarted": "Comienza tu aventura en Soroban con esta misión introductoria.",
+      "allCompleted": "¡Has superado todas las misiones! Vuelve a jugar \"{{missionTitle}}\" para perfeccionar tu dominio."
+    }
+  },
   "missionDetail": {
     "tabs": {
       "story": "Historia",
