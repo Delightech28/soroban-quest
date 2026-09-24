@@ -3,7 +3,7 @@
    RPG-inspired dark theme for Stellar/Soroban
    ========================================== */
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Noto+Sans+JP:wght@400;500;600;700&display=swap");
 
 .notfound-container {
   height: 100vh;
@@ -70,7 +70,7 @@
 
 .footer-content {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* default: 3 columns on desktop */
+  grid-template-columns: repeat(3, 1fr);
   gap: 3rem;
   max-width: 1200px;
   margin: 0 auto;
@@ -167,12 +167,6 @@
   animation: fadeIn 0.6s forwards;
 }
 
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
-}
-
 /* Responsive container */
 .mission-detail-skeleton {
   display: flex;
@@ -189,6 +183,32 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+}
+
+/* Home Skeleton Styles */
+.home-skeleton {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-3xl) var(--space-xl);
+}
+
+.hero-skeleton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: var(--space-3xl);
+}
+
+.features-section-skeleton {
+  width: 100%;
+  max-width: 1200px;
+  padding: var(--space-3xl) var(--space-xl);
 }
 
 :root {
@@ -213,6 +233,7 @@
   --red-dim: rgba(239, 68, 68, 0.15);
   --green: #22c55e;
   --green-dim: rgba(34, 197, 94, 0.15);
+  --green-glow: rgba(34, 197, 94, 0.4);
   --blue: #3b82f6;
   --blue-dim: rgba(59, 130, 246, 0.15);
 
@@ -228,7 +249,7 @@
   --border-glow: rgba(6, 214, 160, 0.6);
 
   /* Typography */
-  --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: "Inter", "Noto Sans JP", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-code: "JetBrains Mono", "Fira Code", monospace;
   --font-display: "Orbitron", sans-serif;
 
@@ -260,6 +281,8 @@
     0 0 20px var(--gold-glow), 0 0 60px rgba(245, 158, 11, 0.1);
   --shadow-glow-green:
     0 0 20px rgba(34, 197, 94, 0.4), 0 0 60px rgba(34, 197, 94, 0.1);
+    --shadow-glow-green:
+    0 0 20px var(--green-glow), 0 0 60px rgba(34, 197, 94, 0.1);
 
   /* Transitions */
   --transition-fast: 150ms ease;
@@ -373,6 +396,21 @@ button {
   font-family: var(--font-body);
 }
 
+/* ============ FOCUS VISIBLE ============ */
+/* Provide a consistent, high-visibility focus ring for all interactive elements */
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Suppress focus ring for mouse users on elements that already have custom styles */
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible),
+[role="button"]:focus:not(:focus-visible) {
+  outline: none;
+}
+
 /* ============ APP LAYOUT ============ */
 .app {
   display: flex;
@@ -382,7 +420,7 @@ button {
 
 .main-content {
   flex: 1;
-  padding-top: 70px; /* navbar height */
+  padding-top: 70px;
 }
 
 /* ============ NAVBAR ============ */
@@ -487,6 +525,20 @@ button {
   font-weight: 600;
 }
 
+.navbar-gold {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  background: var(--gold-dim);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: var(--radius-full);
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
 .navbar-level {
   display: flex;
   align-items: center;
@@ -499,6 +551,108 @@ button {
   font-family: var(--font-display);
   font-size: 0.75rem;
   font-weight: 600;
+}
+/* ==========================================
+   Mobile Navigation & Hamburger Menu (#223)
+   ========================================== */
+
+/* Hide hamburger button and mobile menu by default on desktop */
+.hamburger-btn,
+.mobile-menu,
+.backdrop {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  /* Hide desktop links and stats on mobile screens */
+  .navbar-links,
+  .navbar-stats {
+    display: none !important;
+  }
+
+  /* Show hamburger button with required 44x44px touch target */
+  .hamburger-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    z-index: calc(var(--z-navbar) + 2);
+  }
+
+  /* Backdrop overlay */
+  .backdrop {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: calc(var(--z-navbar) + 1);
+    animation: fadeIn 0.2s ease-out;
+  }
+
+  /* Slide-out mobile drawer menu */
+  .mobile-menu {
+    display: flex !important;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 75%;
+    max-width: 320px;
+    background: var(--bg-secondary);
+    border-left: 1px solid var(--border-subtle);
+    padding: 80px var(--space-lg) var(--space-xl) var(--space-lg);
+    gap: var(--space-sm);
+    z-index: calc(var(--z-navbar) + 2);
+    overflow-y: auto;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+    transform: translateX(100%);
+    transition: transform var(--transition-base);
+  }
+
+  .mobile-menu.open {
+    transform: translateX(0);
+  }
+
+  /* Style mobile links with minimum 44x44px touch height */
+  .mobile-menu a {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem var(--space-md);
+    min-height: 44px;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    transition: background var(--transition-fast), color var(--transition-fast);
+  }
+
+  .mobile-menu a:hover,
+  .mobile-menu a.active {
+    background: var(--cyan-dim);
+    color: var(--cyan);
+  }
+
+  /* Mobile stats footer inside drawer */
+  .mobile-stats {
+  margin-top: auto;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
 }
 
 /* ============ BUTTONS ============ */
@@ -668,6 +822,7 @@ button {
   background: var(--green-dim);
   color: var(--green);
   border: 1px solid rgba(34, 197, 94, 0.2);
+  --green-glow: rgba(34, 197, 94, 0.4);
 }
 
 .badge-intermediate {
@@ -1003,6 +1158,104 @@ button {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* ============ DASHBOARD SECTION ============ */
+.dashboard-section {
+  padding: var(--space-2xl) var(--space-xl);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+  margin-bottom: var(--space-2xl);
+}
+
+.dashboard-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+}
+
+.dashboard-card h3 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+  color: var(--text-primary);
+}
+
+.dashboard-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.dashboard-stat-row:last-child {
+  border-bottom: none;
+}
+
+.dashboard-stat-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.dashboard-stat-value {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--cyan);
+}
+
+.dashboard-activity-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-sm);
+}
+
+.dashboard-activity-item {
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.dashboard-activity-item:last-child {
+  border-bottom: none;
+}
+
+.dashboard-activity-msg {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.dashboard-empty {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: var(--space-sm);
+}
+
+.dashboard-next-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.dashboard-next-goal {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-md);
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1452,6 +1705,46 @@ button {
   background: var(--cyan);
 }
 
+.editor-theme-select {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-family: var(--font-code);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.editor-theme-select-label {
+  display: none;
+}
+
+.editor-theme-select-input {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.6rem;
+  font-family: var(--font-code);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.editor-theme-select-input:hover {
+  color: var(--text-primary);
+  border-color: var(--cyan);
+}
+
+.editor-theme-select-input:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 1px;
+}
+
+@media (min-width: 768px) {
+  .editor-theme-select-label {
+    display: inline;
+  }
+}
+
 .editor-wrapper {
   flex: 1;
   overflow: hidden;
@@ -1631,7 +1924,8 @@ button {
   color: var(--text-secondary);
   margin-bottom: var(--space-xl);
 }
-/* Hide Radio buttons on all screens  */
+
+/* Hide Radio buttons on all screens */
 .tab-radio {
   display: none;
 }
@@ -1733,7 +2027,125 @@ button {
   }
 }
 
-/* MOBILE STYLES  (768px and below) */
+/* ============ SKIP TO CONTENT ============ */
+.skip-to-content {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.6rem 1.2rem;
+  background: var(--cyan);
+  color: var(--bg-primary);
+  font-weight: 700;
+  font-size: 0.9rem;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: top var(--transition-fast);
+}
+
+.skip-to-content:focus {
+  top: 1rem;
+}
+
+/* ============ SCREEN READER ONLY ============ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============ REDUCED MOTION ============ */
+@media (prefers-reduced-motion: reduce) {
+  /* Hero entrance — snap to final visible state */
+  .hero-badge,
+  .hero-title,
+  .hero-subtitle,
+  .hero-actions,
+  .hero-stats {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  /* 404 page float */
+  .notfound-card {
+    animation: none;
+    transform: none;
+  }
+
+  /* Staggered fade-in utility — show immediately */
+  .fade-in {
+    animation: none;
+    opacity: 1;
+  }
+
+  /* Terminal typewriter lines — show immediately */
+  .terminal-line {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Modal / confirmation dialog overlay & content */
+  .modal-overlay,
+  .dialog-overlay {
+    animation: none;
+  }
+
+  .modal-content,
+  .dialog-content {
+    animation: none;
+    transform: none;
+  }
+
+  .dialog-icon {
+    animation: none;
+  }
+
+  /* Skeleton & shimmer loaders — freeze static */
+  .skeleton::after,
+  .xp-bar-fill::after {
+    animation: none;
+  }
+
+  /* Spinner — stop rotation */
+  .spinner {
+    animation: none;
+  }
+
+  /* Mobile slide-in menu — remove transition */
+  .mobile-menu {
+    transition: none;
+  }
+
+  /* Campaign detail overlay & content */
+  .campaign-detail-overlay {
+    animation: none;
+  }
+
+  .campaign-detail {
+    animation: none;
+    transform: none;
+  }
+
+  /* Hover transforms — neutralise */
+  .campaign-card:hover,
+  .mission-item:hover,
+  .summary-stat:hover,
+  .profile-selector-card:hover,
+  .profile-selector-card.active,
+  .btn-confirm:hover {
+    transform: none;
+  }
+}
+
+/* MOBILE STYLES (768px and below) */
 @media (max-width: 768px) {
   .mission-map-page {
     padding: var(--space-xl) var(--space-md);
@@ -1789,7 +2201,7 @@ button {
     background: var(--bg-secondary);
     border-bottom: 1px solid var(--border-subtle);
     position: sticky;
-    top: 70px; /* below the fixed navbar */
+    top: 70px;
     z-index: 50;
   }
 
@@ -1820,7 +2232,6 @@ button {
     color: var(--text-primary);
   }
 
-  /* Active tab indicator — driven entirely by :checked, no JS */
   #tab-story:checked ~ .mobile-tabs label[for="tab-story"],
   #tab-editor:checked ~ .mobile-tabs label[for="tab-editor"],
   #tab-tests:checked ~ .mobile-tabs label[for="tab-tests"] {
@@ -1833,22 +2244,17 @@ button {
     width: 100%;
   }
 
-  /* Switch to single-column layout on mobile */
   .mission-detail {
     display: block;
     height: auto;
     overflow: visible;
   }
 
-  /* --- Panel visibility via :checked — no JS, no !important --- */
-
-  /* By default on mobile, hide both main panels */
   .mission-detail .mission-story,
   .mission-detail .mission-editor-panel {
     display: none;
   }
 
-  /* Story tab active */
   #tab-story:checked ~ .mission-detail .mission-story {
     display: block;
     min-height: calc(100vh - 70px - 44px);
@@ -1856,7 +2262,6 @@ button {
     border-right: none;
   }
 
-  /* Editor tab active — show editor panel, hide terminal within it */
   #tab-editor:checked ~ .mission-detail .mission-editor-panel {
     display: flex;
     flex-direction: column;
@@ -1872,7 +2277,6 @@ button {
     min-height: 0;
   }
 
-  /* Tests tab active — show editor panel, hide editor/toolbar, show terminal */
   #tab-tests:checked ~ .mission-detail .mission-editor-panel {
     display: flex;
     flex-direction: column;
@@ -1901,7 +2305,6 @@ button {
     max-height: none;
   }
 
-  /* Toolbar wraps on small screens */
   .mission-editor-toolbar {
     flex-wrap: wrap;
     gap: var(--space-xs);
@@ -1911,7 +2314,6 @@ button {
     flex-wrap: wrap;
   }
 
-  /* Run Tests button meets 44px minimum tap target */
   .btn-sm {
     min-height: 44px;
   }
@@ -1927,7 +2329,6 @@ button {
   z-index: 120;
 }
 
-/* show only mobile */
 @media (max-width: 768px) {
   .hamburger-btn {
     display: block;
@@ -2001,160 +2402,5 @@ button {
   .navbar {
     padding: 0 16px;
   }
-}
-/* ==========================================================================
-   Quest Loading Screen Overlay Styles (Issue #98)
-   ========================================================================== */
-
-
- .quest-loading-overlay {
-  position: fixed !important; /* Overrides any relative layouts */
-  top: 0 !important;
-  left: 0 !important;
-  width: 100vw !important;  /* Forces full viewport width on large monitors */
-  height: 100vh !important; /* Forces full viewport height on large monitors */
-  max-width: 100% !important;
-  max-height: 100% !important;
-  background-color: #0a1720 !important; /* Prevents background leaking */
-  color: #ffffff;
-  z-index: 999999 !important; /* Pushes it past any high-index desktop layouts */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
-
-/* ==========================================
-   GLOBAL ACCESSIBILITY & KEYBOARD FOCUS STYLES (#102)
-   ========================================== */
-
-/* High contrast outline rings only targeting active keyboard tab navigation */
-*:focus-visible {
-  outline: 3px solid var(--cyan);
-  outline-offset: 3px;
-  box-shadow: 0 0 12px var(--cyan-glow);
-}
-
-/* Disable standard fallback blur rings when click actions happen via mouse */
-*:focus:not(:focus-visible) {
-  outline: none;
-}
-
-/* Visually Hidden Utility for Skip-Links & Screen Reader helper texts */
-.skip-to-content {
-  position: absolute;
-  top: -100px;
-  left: 24px;
-  background: linear-gradient(135deg, var(--cyan), #05b88a);
-  color: #0a0e1a;
-  padding: 12px 24px;
-  font-weight: 700;
-  font-family: var(--font-display);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-glow-cyan);
-  z-index: 99999;
-  transition: top var(--transition-fast) ease;
-}
-
-/* Snap into visible boundary layout area upon initial tab interaction focus state */
-.skip-to-content:focus-visible {
-  top: 16px;
-  outline: 3px solid #f1f5f9;
-}
-
-/* Visually hides assistive text snippets completely off screen for sighted users */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-
-/* Ambient Pulse Glow background element */
-.quest-loading-glow {
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  background-color:  #020617;
-  opacity: 0.04;
-  border-radius: 50%;
-  filter: blur(80px);
-  animation: questPulse 2s ease-in-out infinite alternate;
-}
-
-.quest-loading-content {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-/* Spinner Framework Structure */
-.quest-loading-spinner-container {
-  position: relative;
-  width: 64px;
-  height: 64px;
-}
-
-.quest-loading-spinner-bg {
-  position: absolute;
-  inset: 0;
-  border: 4px solid rgba(207, 253, 237, 0.15);
-  border-radius: 50%;
-}
-
-.quest-loading-spinner-active {
-  position: absolute;
-  inset: 0;
-  border: 4px solid transparent;
-  border-top-color: #273d72; /* Branded gold accent indicator */
-  border-radius: 50%;
-  animation: questSpin 1s linear infinite;
-}
-
-/* Typography Adjustments */
-.quest-loading-text-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.quest-loading-title {
-  margin: 0;
-  font-weight: 700;
-  font-size: 1.25rem;
-  letter-spacing: 0.08em;
-  color: #CFFDED;
-  text-transform: uppercase;
-  animation: questPulse 1.5s ease-in-out infinite alternate;
-}
-
-.quest-loading-subtitle {
-  margin: 6px 0 0 0;
-  font-size: 0.75rem;
-  color: #8a939b;
-  font-family: monospace;
-}
-
-/* Keyframes Definitions */
-@keyframes questSpin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes questPulse {
-  0% { opacity: 0.6; transform: scale(0.98); }
-  100% { opacity: 1; transform: scale(1.02); }
 }
 

@@ -11,8 +11,21 @@
    language (falling back to English when a translation is missing).
    ========================================== */
 
+import helloSorobanMarkdown from './missions/hello-soroban.md?raw';
+import { createMissionFromMarkdown } from '../systems/missionParser.js';
+import enLocale from '../i18n/locales/en.json';
+import esLocale from '../i18n/locales/es.json';
+
+const authoredMissions = Object.values(
+    import.meta.glob('./missions/authored/*.json', { eager: true, import: 'default' }),
+);
+const missionLocales = { en: enLocale, es: esLocale };
+
 export const DEFAULT_MISSION_LANG = 'en';
 
+const helloSorobanContent = createMissionFromMarkdown(helloSorobanMarkdown);
+
+/* eslint-disable no-useless-escape */
 export const missions = [
     {
         id: 'hello-soroban',
@@ -20,42 +33,11 @@ export const missions = [
         order: 1,
         difficulty: 'beginner',
         xpReward: 100,
+        ...helloSorobanContent,
         i18n: {
+            ...helloSorobanContent.i18n,
             en: {
-                title: 'The First Contract',
-                story: `# 🌌 The Awakening
-
-You stand at the gates of the **Stellar Citadel**, a shimmering fortress orbiting the edge of known space. The Guardians of Soroban have sensed your arrival.
-
-*"Another seeker,"* whispers the Elder Guardian. *"To prove yourself worthy, you must forge your first smart contract."*
-
-## Your Mission
-
-Create your first Soroban smart contract — a simple contract with a \`hello\` function that takes a name and returns a greeting.
-
-## What You'll Learn
-
-- The \`#[contract]\` and \`#[contractimpl]\` attributes
-- The \`Env\` type — your gateway to the blockchain
-- The \`Symbol\` type for string-like values
-- How to return a \`Vec<Symbol>\`
-
-## Key Concepts
-
-\`\`\`rust
-#[contract]          // Marks your struct as a contract
-#[contractimpl]      // Contains the contract methods
-Env                  // The execution environment
-Symbol               // A small, efficient string type
-\`\`\`
-
-Complete the code template to pass all checks. The Guardians await your first contract! ⚔️`,
-                learningGoal: 'Create your first Soroban smart contract with a hello function',
-                hints: [
-                    'Start with `pub fn hello(env: Env, to: Symbol) -> Vec<Symbol>`',
-                    'Use the `vec![]` macro with `&env` as the first argument',
-                    'The full return line: `vec![&env, symbol_short!("Hello"), to]`',
-                ],
+                ...helloSorobanContent.i18n.en,
             },
             es: {
                 title: 'El Primer Contrato',
@@ -91,6 +73,79 @@ Completa la plantilla de código para pasar todas las verificaciones. ¡Los Guar
                     'Comienza con `pub fn hello(env: Env, to: Symbol) -> Vec<Symbol>`',
                     'Usa la macro `vec![]` con `&env` como primer argumento',
                     'La línea de retorno completa: `vec![&env, symbol_short!("Hello"), to]`',
+                ],
+            },
+            fr: {
+                title: 'Le Premier Contrat',
+                story: `# 🌌 L'Éveil
+
+Tu te tiens devant les portes de la **Citadelle Stellaire**, une forteresse scintillante en orbite au bord de l'espace connu. Les Gardiens de Soroban ont perçu ton arrivée.
+
+*"Encore un chercheur,"* murmure le Gardien Ancien. *"Pour prouver ta valeur, tu dois forger ton premier contrat intelligent."*
+
+## Ta Mission
+
+Crée ton premier contrat intelligent Soroban — un contrat simple avec une fonction \`hello\` qui reçoit un nom et renvoie une salutation.
+
+## Ce Que Tu Apprendras
+
+- Les attributs \`#[contract]\` et \`#[contractimpl]\`
+- Le type \`Env\` — ta porte d'entrée vers la blockchain
+- Le type \`Symbol\` pour les valeurs de type chaîne
+- Comment renvoyer un \`Vec<Symbol>\`
+
+## Concepts Clés
+
+\`\`\`rust
+#[contract]          // Marks your struct as a contract
+#[contractimpl]      // Contains the contract methods
+Env                  // The execution environment
+Symbol               // A small, efficient string type
+\`\`\`
+
+Complète le modèle de code pour passer toutes les vérifications. Les Gardiens attendent ton premier contrat ! ⚔️`,
+                learningGoal: 'Crée ton premier contrat intelligent Soroban avec une fonction hello',
+                hints: [
+                    'Commence par `pub fn hello(env: Env, to: Symbol) -> Vec<Symbol>`',
+                    'Utilise la macro `vec![]` avec `&env` comme premier argument',
+                    'La ligne de retour complète : `vec![&env, symbol_short!("Hello"), to]`',
+                ],
+            },
+            ja: {
+                title: 'はじめての契約',
+                story: `# 🌌 目覚めの刻
+
+未知の星系へと流れ着いたあなた。古い魔法書『Stellar』の中に、強大な力を秘めたスマートコントラクトの技術が眠っていることを知りました。
+
+Sorobanの領地に到着したあなたの前に、一人の老賢者が現れました。「ようこそ、契約魔法師よ。まずはこの基本の力を習得しなければならん。『hello』という最も単純な呪文を唱える準備はできているか？」
+
+## あなたの使命
+
+あなたの最初の任務は、\`hello\`という関数を持つスマートコントラクトを作成することです。このシンプルな契約は、Sorobanの世界での基本的な魔法の力を象徴しています。
+
+## これから学ぶこと
+
+- Rustでスマートコントラクトを記述する基本的な構文
+- \`#[contractimpl]\`マクロを使用した関数の定義方法
+- Soroban環境での最初の展開と実行
+
+## 重要なコンセプト
+
+契約の基本構造を理解することが、すべての冒険の第一歩です。
+
+\`\`\`rust
+#[contract]          // structを契約としてマーク
+#[contractimpl]      // 契約実装ブロック
+Env                  // 実行環境
+Symbol               // 効率的な文字列型
+\`\`\`
+
+テンプレートコードを完成させ、すべての検証に合格してください。老賢者があなたの契約を待っています！ ⚔️`,
+                learningGoal: 'Sorobanで最初のスマートコントラクトを作成し、基本的な関数を実装する',
+                hints: [
+                    '\`pub fn hello(env: Env, to: Symbol) -> Vec<Symbol>\`から始める',
+                    '第一引数として\`&env\`を持つ\`vec!\`マクロを使用する',
+                    '完全な戻り文: \`vec![&env, symbol_short!("Hello"), to]\`',
                 ],
             },
         },
@@ -207,6 +262,76 @@ u32                 // Entero sin signo de 32 bits
                     'La firma de la función greet: `pub fn greet(env: Env, name: Symbol) -> Vec<Symbol>`',
                     'Para count_chars: `pub fn count_chars(env: Env, text: String) -> u32`',
                     'Usa `text.len()` para obtener la longitud de la cadena',
+                ],
+            },
+            fr: {
+                title: 'Protocole de Salutations',
+                story: `# 📡 La Tour de Signaux
+
+La première porte est ouverte. Tu avances vers la **Tour de Signaux**, où les messages se propagent à travers le réseau Stellar.
+
+*"La communication est un pouvoir,"* dit le Gardien de la Tour. *"Ton contrat doit apprendre à gérer les données — accepter des entrées et renvoyer des réponses structurées."*
+
+## Ta Mission
+
+Construis un contrat avec plusieurs fonctions :
+- \`greet\` — reçoit un nom et renvoie une salutation personnalisée
+- \`count_chars\` — reçoit une chaîne et renvoie sa longueur en u32
+
+## Ce Que Tu Apprendras
+
+- Plusieurs fonctions dans un seul contrat
+- Travailler avec le type \`String\` dans Soroban
+- Renvoyer différents types depuis les fonctions
+- La macro \`symbol_short!\`
+
+## Concepts Clés
+
+\`\`\`rust
+String              // Full string type in Soroban
+symbol_short!()     // Create a Symbol from a short literal
+u32                 // Unsigned 32-bit integer
+\`\`\``,
+                learningGoal: 'Construis un contrat multifonction avec différents types de retour',
+                hints: [
+                    'La signature de la fonction greet : `pub fn greet(env: Env, name: Symbol) -> Vec<Symbol>`',
+                    'Pour count_chars : `pub fn count_chars(env: Env, text: String) -> u32`',
+                    'Utilise `text.len()` pour obtenir la longueur de la chaîne',
+                ],
+            },
+            ja: {
+                title: '挨拶のプロトコル',
+                story: `# 📡 信号塔
+
+最初の門が開きました。**信号塔**へ進むあなた。Stellarネットワーク中にメッセージが波及しています。
+
+*"通信は力だ,"* 塔の管理人は言います。*"君のコントラクトはデータを管理することを学ばねばならない — 入力を受け入れ、構造化された応答を返すのだ。"*
+
+## あなたの使命
+
+複数の関数を持つコントラクトを構築してください:
+- \`greet\` — 名前を受け取り、パーソナライズされた挨拶を返す
+- \`count_chars\` — 文字列を受け取り、その長さをu32として返す
+
+## これから学ぶこと
+
+- 単一コントラクト内に複数の関数を実装する方法
+- Soroban内で\`String\`型を使用すること
+- 関数から異なるタイプを返す方法
+- \`symbol_short!\`マクロ
+
+## 重要なコンセプト
+
+\`\`\`rust
+String              // Soroban内のフル文字列型
+symbol_short!()     // 短いリテラルからSymbolを作成
+u32                 // 符号なし32ビット整数
+\`\`\``,
+                learningGoal: '異なる戻り値型を持つマルチ関数コントラクトを構築する',
+                hints: [
+                    'greet関数の署名: \`pub fn greet(env: Env, name: Symbol) -> Vec<Symbol>\`',
+                    'count_charsの場合: \`pub fn count_chars(env: Env, text: String) -> u32\`',
+                    '\`text.len()\`を使用して文字列の長さを取得する',
                 ],
             },
         },
@@ -331,6 +456,76 @@ env.storage().instance().get(&key)          // Leer (devuelve Option)
                     'Usa `env.storage().instance().get(&COUNTER)` para leer el conteo',
                     'Usa `.unwrap_or(0)` para devolver 0 por defecto cuando no existe un valor',
                     'Usa `env.storage().instance().set(&COUNTER, &new_count)` para guardar el nuevo conteo',
+                ],
+            },
+            fr: {
+                title: 'Le Coffre Compteur',
+                story: `# 🔐 Le Coffre de la Mémoire
+
+Tu descends dans le **Coffre de la Mémoire**, où les anciens ont entreposé la sagesse qui persiste à travers le temps.
+
+*"Un contrat sans mémoire est comme un être conscient sans âme,"* murmure le Gardien du Coffre. *"Apprends à stocker et à récupérer — à te souvenir."*
+
+## Ta Mission
+
+Crée un contrat compteur qui conserve sa valeur :
+- \`increment\` — augmente le compteur de 1
+- \`get_count\` — renvoie le décompte actuel
+
+## Ce Que Tu Apprendras
+
+- Le **stockage persistant** avec \`env.storage().instance()\`
+- Lire et écrire l'état
+- Le motif de clé \`Symbol\` pour le stockage
+- Les valeurs par défaut avec \`.unwrap_or()\`
+
+## Concepts Clés
+
+\`\`\`rust
+env.storage().instance().set(&key, &value)  // Write
+env.storage().instance().get(&key)          // Read (returns Option)
+.unwrap_or(default)                         // Default if None
+\`\`\``,
+                learningGoal: 'Utilise le stockage persistant pour créer un contrat compteur avec état',
+                hints: [
+                    'Utilise `env.storage().instance().get(&COUNTER)` pour lire le décompte',
+                    'Utilise `.unwrap_or(0)` pour renvoyer 0 par défaut quand aucune valeur n\'existe',
+                    'Utilise `env.storage().instance().set(&COUNTER, &new_count)` pour enregistrer le nouveau décompte',
+                ],
+            },
+            ja: {
+                title: '数の庫',
+                story: `# 🔐 永遠の記憶の金庫
+
+**メモリの金庫**へ下ります。ここに古代人たちが時を超えて存続する知恵を保管しました。
+
+*"記憶のない契約は、魂のない意識のある者のようだ,"* 金庫の守護者はつぶやきます。*"保存と取得を学ぶのだ — 記憶することを。"*
+
+## あなたの使命
+
+その値を保存するカウンターコントラクトを作成してください:
+- \`increment\` — カウンターを1増やす
+- \`get_count\` — 現在のカウント値を返す
+
+## これから学ぶこと
+
+- \`env.storage().instance()\`を使用した**永続的ストレージ**
+- 状態の読み書き
+- ストレージのための\`Symbol\`キーパターン
+- \`.unwrap_or()\`を使用したデフォルト値
+
+## 重要なコンセプト
+
+\`\`\`rust
+env.storage().instance().set(&key, &value)  // 書き込み
+env.storage().instance().get(&key)          // 読み取り（Optionを返す）
+.unwrap_or(default)                         // Noneの場合はデフォルト
+\`\`\``,
+                learningGoal: '永続的ストレージを使用して状態を持つカウンターコントラクトを作成する',
+                hints: [
+                    '\`env.storage().instance().get(&COUNTER)\`を使用してカウントを読み取る',
+                    '値が存在しない場合のデフォルトとして\`.unwrap_or(0)\`を使用する',
+                    '\`env.storage().instance().set(&COUNTER, &new_count)\`を使用して新しいカウントを保存する',
                 ],
             },
         },
@@ -465,6 +660,78 @@ Map<Address, Symbol>        // Mapeo clave-valor
                     'La función init almacena el admin: `env.storage().instance().set(&ADMIN, &admin)`',
                     'En register, llama a `who.require_auth()` antes de almacenar',
                     'Almacena con: `env.storage().instance().set(&who, &name)`',
+                ],
+            },
+            fr: {
+                title: 'Registre du Gardien',
+                story: `# 📋 Le Registre du Gardien
+
+La Chambre du Conseil rayonne d'une lumière ancestrale. Devant toi repose le **Registre du Gardien** — un recensement de tous ceux qui ont fait leurs preuves.
+
+*"Pour protéger le royaume, tu dois contrôler qui peut agir,"* déclare le Chef du Conseil. *"Apprends l'art du contrôle d'accès."*
+
+## Ta Mission
+
+Construis un contrat de registre avec contrôle d'accès :
+- \`register\` — enregistre un nouveau gardien (stocke son nom)
+- \`get_guardian\` — récupère le nom d'un gardien par son adresse
+- Une adresse \`admin\` définie lors de l'initialisation
+
+## Ce Que Tu Apprendras
+
+- Le type \`Address\` pour les identités d'utilisateur
+- \`require_auth()\` pour le contrôle d'accès
+- Travailler avec le type \`Map\` pour les paires clé-valeur
+- Les motifs d'initialisation de contrats
+
+## Concepts Clés
+
+\`\`\`rust
+Address                     // Represents an account/identity
+address.require_auth()      // Ensures the caller is authorized
+Map<Address, Symbol>        // Key-value mapping
+\`\`\``,
+                learningGoal: 'Implémente le contrôle d\'accès avec Address et require_auth',
+                hints: [
+                    'La fonction init stocke l\'admin : `env.storage().instance().set(&ADMIN, &admin)`',
+                    'Dans register, appelle `who.require_auth()` avant de stocker',
+                    'Stocke avec : `env.storage().instance().set(&who, &name)`',
+                ],
+            },
+            ja: {
+                title: '守護者の記録簿',
+                story: `# 📋 守護者の記録簿
+
+評議会の会議室は古代の光で輝いています。あなたの前には**守護者の記録簿**が横たわっています — 自分たちの価値を証明したすべての者の国勢調査。
+
+*"王国を保護するには、誰が行動できるかを制御する必要がある,"* 評議会の首長が宣言します。*"アクセス制御の芸術を学ぶのだ。"*
+
+## あなたの使命
+
+アクセス制御付きのレジストリコントラクトを構築してください:
+- \`register\` — 新しい守護者を登録（その名前を保存）
+- \`get_guardian\` — アドレスで守護者の名前を取得
+- 初期化時に設定される\`admin\`アドレス
+
+## これから学ぶこと
+
+- ユーザーアイデンティティの\`Address\`型
+- アクセス制御のための\`require_auth()\`
+- キーと値のペアのために\`Map\`型で作業する
+- コントラクト初期化パターン
+
+## 重要なコンセプト
+
+\`\`\`rust
+Address                     // アカウント/アイデンティティを表す
+address.require_auth()      // 呼び出し元が認可されていることを保証
+Map<Address, Symbol>        // キー・値マッピング
+\`\`\``,
+                learningGoal: 'AddressとrequireAuthを使用したアクセス制御を実装する',
+                hints: [
+                    'init関数はadminを保存する: \`env.storage().instance().set(&ADMIN, &admin)\`',
+                    'registerで、保存する前に\`who.require_auth()\`を呼び出す',
+                    '保存: \`env.storage().instance().set(&who, &name)\`',
                 ],
             },
         },
@@ -610,6 +877,82 @@ let bal: i128 = env.storage().persistent().get(&from).unwrap_or(0);
                     'Para mint: obtén el admin del almacenamiento, llama a admin.require_auth(), luego actualiza el saldo',
                     'Para balance: `env.storage().persistent().get(&account).unwrap_or(0)`',
                     'Para transfer: require_auth del remitente, lee ambos saldos, actualiza ambos',
+                ],
+            },
+            fr: {
+                title: 'La Forge de Tokens',
+                story: `# ⚒️ La Forge de Tokens
+
+Au plus profond de la Citadelle repose la **Forge de Tokens**, où les actifs numériques sont frappés à partir de pure logique.
+
+*"La monnaie est la sève de toute économie,"* dit le Maître Forgeron. *"Tu vas créer un token qui peut être transféré entre les comptes."*
+
+## Ta Mission
+
+Crée un contrat de token simple :
+- \`mint\` — crée des tokens pour une adresse (admin uniquement)
+- \`balance\` — renvoie le solde d'une adresse
+- \`transfer\` — déplace des tokens d'une adresse à une autre
+
+## Ce Que Tu Apprendras
+
+- La gestion des soldes de tokens
+- La logique de transfert avec autorisation
+- Les fonctions restreintes à l'admin
+- L'arithmétique entière pour les soldes
+
+## Concepts Clés
+
+\`\`\`rust
+// Admin check pattern
+admin.require_auth();
+
+// Balance management
+let bal: i128 = env.storage().persistent().get(&from).unwrap_or(0);
+\`\`\``,
+                learningGoal: 'Construis un token de base avec les fonctions mint, balance et transfer',
+                hints: [
+                    'Pour mint : récupère l\'admin depuis le stockage, appelle admin.require_auth(), puis mets à jour le solde',
+                    'Pour balance : `env.storage().persistent().get(&account).unwrap_or(0)`',
+                    'Pour transfer : require_auth de l\'expéditeur, lis les deux soldes, mets à jour les deux',
+                ],
+            },
+            ja: {
+                title: 'トークン鍛造所',
+                story: `# ⚒️ トークン鍛造所
+
+シタデルの最奥部には**トークン鍛造所**があります。ここで、デジタル資産が純粋なロジックから鋳造されます。
+
+*"通貨はあらゆる経済の生命の血だ,"* 鍛冶職人は言います。*"君はアカウント間で転送できるトークンを作成するのだ。"*
+
+## あなたの使命
+
+シンプルなトークンコントラクトを作成してください:
+- \`mint\` — アドレス用のトークンを作成（管理者のみ）
+- \`balance\` — アドレスの残高を返す
+- \`transfer\` — トークンを1つのアドレスから別のアドレスに移動
+
+## これから学ぶこと
+
+- トークン残高管理
+- 認可付き転送ロジック
+- 管理者制限機能
+- 残高のための整数演算
+
+## 重要なコンセプト
+
+\`\`\`rust
+// 管理者確認パターン
+admin.require_auth();
+
+// 残高管理
+let bal: i128 = env.storage().persistent().get(&from).unwrap_or(0);
+\`\`\``,
+                learningGoal: 'mint、balance、transfer機能を持つ基本的なトークンを構築する',
+                hints: [
+                    'mintの場合: ストレージからadminを取得し、admin.require_auth()を呼び出し、残高を更新',
+                    'balanceの場合: \`env.storage().persistent().get(&account).unwrap_or(0)\`',
+                    'transferの場合: 送信者からrequire_auth、両方の残高を読み取り、両方を更新',
                 ],
             },
         },
@@ -762,6 +1105,76 @@ panic!("message")        // Abortar con un error
                     'Usa `env.ledger().sequence()` para obtener el número de ledger actual',
                     'Compara: `if current_seq < unlock_at { panic!("Still locked"); }`',
                     'Limpia el almacenamiento tras desbloquear: `env.storage().instance().remove(&key)`',
+                ],
+            },
+            fr: {
+                title: 'Le Verrou Temporel',
+                story: `# ⏳ La Porte du Temps
+
+La **Porte du Temps** se dresse devant toi, ses mécanismes battant au rythme du grand livre.
+
+*"Le temps est une arme,"* dit le Gardien du Temps. *"Apprends à verrouiller et à déverrouiller selon le défilement des blocs."*
+
+## Ta Mission
+
+Crée un coffre à verrou temporel :
+- \`lock\` — verrouille des tokens jusqu'à un numéro de séquence de grand livre donné
+- \`unlock\` — libère les tokens si la période de verrouillage est écoulée
+- \`get_lock_info\` — renvoie le moment où le verrou expire
+
+## Ce Que Tu Apprendras
+
+- La séquence / l'horodatage du grand livre pour une logique temporelle
+- L'exécution conditionnelle selon l'état de la blockchain
+- \`env.ledger().sequence()\` pour le bloc actuel
+- Les motifs de panic pour la gestion des erreurs
+
+## Concepts Clés
+
+\`\`\`rust
+env.ledger().sequence()  // Current ledger sequence number
+panic!("message")        // Abort with error
+\`\`\``,
+                learningGoal: 'Implémente une logique conditionnelle basée sur le temps en utilisant la séquence du grand livre',
+                hints: [
+                    'Utilise `env.ledger().sequence()` pour obtenir le numéro de grand livre actuel',
+                    'Compare : `if current_seq < unlock_at { panic!("Still locked"); }`',
+                    'Nettoie le stockage après le déverrouillage : `env.storage().instance().remove(&key)`',
+                ],
+            },
+            ja: {
+                title: '時間の鍵',
+                story: `# ⏳ 時間の門
+
+**時間の門**があなたの前に立ちはだかります。その機構はグレートブックのリズムで動いています。
+
+*"時間は武器だ,"* 時間の守護者が言います。*"ブロックの流れに従ってロックと解除を学ぶのだ。"*
+
+## あなたの使命
+
+時間ロック付きの金庫を作成してください:
+- \`lock\` — 特定のレッジャーシーケンス番号までトークンをロック
+- \`unlock\` — ロック期間が過ぎたらトークンを解放
+- \`get_lock_info\` — ロックが有効期限切れになるときを返す
+
+## これから学ぶこと
+
+- 時間的ロジックのためのレッジャーシーケンス/タイムスタンプ
+- ブロックチェーン状態に基づく条件付き実行
+- 現在のブロック用\`env.ledger().sequence()\`
+- エラー処理のpanic!パターン
+
+## 重要なコンセプト
+
+\`\`\`rust
+env.ledger().sequence()  // 現在のレッジャーシーケンス番号
+panic!("message")        // エラーで中止
+\`\`\``,
+                learningGoal: 'レッジャーシーケンスを使用した時間ベースの条件付きロジックを実装する',
+                hints: [
+                    '現在のレッジャー番号を取得するために\`env.ledger().sequence()\`を使用する',
+                    '比較: \`if current_seq < unlock_at { panic!("Still locked"); }\`',
+                    'ロック解除後ストレージをクリア: \`env.storage().instance().remove(&key)\`',
                 ],
             },
         },
@@ -931,6 +1344,86 @@ env.storage().instance().set(&signer_key, &true);
                     'En is_complete: compara signed >= required',
                 ],
             },
+            fr: {
+                title: 'Pacte Multipartite',
+                story: `# 🤝 La Salle des Pactes
+
+Tu as atteint la **Salle des Pactes**, le défi final avant de gagner ta place parmi les Gardiens.
+
+*"Le véritable pouvoir des contrats intelligents,"* déclare le Grand Ancien, *"c'est qu'ils permettent la confiance entre inconnus."*
+
+## Ta Mission
+
+Crée un contrat d'accord à signatures multiples :
+- \`create_pact\` — crée un accord nécessitant N signatures
+- \`sign_pact\` — permet à une partie de signer l'accord
+- \`is_complete\` — vérifie si toutes les signatures requises ont été réunies
+- \`get_signers\` — renvoie qui a signé
+
+## Ce Que Tu Apprendras
+
+- Les structures de données complexes dans les contrats
+- L'autorisation multipartite
+- Le comptage et le suivi avec le stockage
+- La construction de motifs de gouvernance du monde réel
+
+## Concepts Clés
+
+\`\`\`rust
+// Track signer count
+let count: u32 = env.storage().instance()
+    .get(&SIGNER_COUNT).unwrap_or(0);
+
+// Store with dynamic keys
+env.storage().instance().set(&signer_key, &true);
+\`\`\``,
+                learningGoal: 'Construis un contrat de pacte à signatures multiples avec une gestion d\'état complexe',
+                hints: [
+                    'Dans create_pact : stocke la description, le nombre requis et un décompte initial de signatures à 0',
+                    'Dans sign_pact : lis le décompte actuel, incrémente-le de 1, enregistre-le à nouveau',
+                    'Dans is_complete : compare signed >= required',
+                ],
+            },
+            ja: {
+                title: '多者協約',
+                story: `# 🤝 協約の間
+
+**協約の間**に到達しました。これはガーディアンの中であなたの場所を獲得する前の最終的な課題です。
+
+*"スマートコントラクトの真の力,"* グレートエルダーが宣言します。*"それは見知らぬ者同士の間に信頼を生み出すことなのだ。"*
+
+## あなたの使命
+
+複数署名を持つ協約コントラクトを作成してください:
+- \`create_pact\` — N個の署名を必要とする協約を作成
+- \`sign_pact\` — 当事者が協約に署名することを許可
+- \`is_complete\` — すべての必要な署名が集まったかどうかを確認
+- \`get_signers\` — 誰が署名したかを返す
+
+## これから学ぶこと
+
+- コントラクト内の複雑なデータ構造
+- マルチパーティ認可
+- ストレージでのカウントと追跡
+- 実世界のガバナンスパターンの構築
+
+## 重要なコンセプト
+
+\`\`\`rust
+// 署名者数を追跡
+let count: u32 = env.storage().instance()
+    .get(&SIGNER_COUNT).unwrap_or(0);
+
+// 動的キーで保存
+env.storage().instance().set(&signer_key, &true);
+\`\`\``,
+                learningGoal: '複雑な状態管理を持つ複数署名協約コントラクトを構築する',
+                hints: [
+                    'create_pactで: 説明、必要な数、初期署名カウント0を保存',
+                    'sign_pactで: 現在のカウントを読み取り、1を加算し、戻す',
+                    'is_completeで: signed >= requiredを比較',
+                ],
+            },
         },
         template: `#![no_std]
 use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
@@ -1011,11 +1504,3730 @@ impl PactContract {
         ],
         conceptsIntroduced: ['multi-sig', 'bool', 'governance pattern', 'complex state'],
     },
-];
 
 /* ==========================================
-   Localization helpers
+   Chapter 4: Data Fortress
    ========================================== */
+
+    {
+        id: 'vault-manager',
+        chapter: 4,
+        order: 8,
+        difficulty: 'intermediate',
+        xpReward: 300,
+        i18n: {
+            en: {
+                title: 'Vault Manager',
+                story: `# 🏦 The Data Fortress
+
+Beyond the Hall of Pacts lies the **Data Fortress**, where countless user balances are stored and protected.
+
+*"One balance is trivial,"* says the Vault Architect. *"Managing many — that is the art of storage architecture."*
+
+## Your Mission
+
+Build a vault contract that manages multiple user balances:
+- \`deposit\` — adds funds to a user's balance (user must auth)
+- \`withdraw\` — subtracts funds from a user's balance (user must auth)
+- \`get_balance\` — returns a user's current balance
+
+## What You'll Learn
+
+- \`Map<Address, i128>\` for multi-user state
+- \`Env::require_auth()\` for per-user authorization
+- Persistent storage with complex keys
+- Safe arithmetic patterns
+
+## Key Concepts
+
+\`\`\`rust
+// Map for multiple balances
+let mut balances: Map<Address, i128> = env.storage()
+    .instance()
+    .get(&BALANCES)
+    .unwrap_or(Map::new(&env));
+
+// Per-user auth
+user.require_auth();
+
+// Update and persist
+balances.set(user, &(current + amount));
+env.storage().instance().set(&BALANCES, &balances);
+\`\`\``,
+                learningGoal: 'Build a multi-user vault with Map storage pattern',
+                hints: [
+                    'Use Map<Address, i128> to store user balances',
+                    'Call user.require_auth() before modifying a user balance',
+                    'Read the Map from storage with .unwrap_or(Map::new(&env))',
+                    'For deposit: get current balance, add amount, set back',
+                ],
+            },
+            es: {
+                title: 'Gestor de Bóveda',
+                story: `# 🏦 La Fortaleza de Datos
+
+Más allá del Salón de los Pactos yace la **Fortaleza de Datos**, donde innumerables saldos de usuarios se almacenan y protegen.
+
+*"Un solo saldo es trivial,"* dice el Arquitecto de la Bóveda. *"Gestionar muchos — ese es el arte de la arquitectura de almacenamiento."*
+
+## Tu Misión
+
+Construye un contrato de bóveda que gestione múltiples saldos de usuarios:
+- \`deposit\` — añade fondos al saldo de un usuario (el usuario debe autenticarse)
+- \`withdraw\` — resta fondos del saldo de un usuario (el usuario debe autenticarse)
+- \`get_balance\` — devuelve el saldo actual de un usuario
+
+## Lo Que Aprenderás
+
+- \`Map<Address, i128>\` para estado multiusuario
+- \`Env::require_auth()\` para autorización por usuario
+- Almacenamiento persistente con claves complejas
+- Patrones aritméticos seguros
+
+## Conceptos Clave
+
+\`\`\`rust
+// Map para múltiples saldos
+let mut balances: Map<Address, i128> = env.storage()
+    .instance()
+    .get(&BALANCES)
+    .unwrap_or(Map::new(&env));
+
+// Autenticación por usuario
+user.require_auth();
+
+// Actualizar y persistir
+balances.set(user, &(current + amount));
+env.storage().instance().set(&BALANCES, &balances);
+\`\`\``,
+                learningGoal: 'Construye una bóveda multiusuario con patrón de almacenamiento Map',
+                hints: [
+                    'Usa Map<Address, i128> para almacenar los saldos de los usuarios',
+                    'Llama a user.require_auth() antes de modificar el saldo de un usuario',
+                    'Lee el Map del almacenamiento con .unwrap_or(Map::new(&env))',
+                    'Para deposit: obtén el saldo actual, suma el monto, guarda de nuevo',
+                ],
+            },
+            fr: {
+                title: 'Gestionnaire de Coffre',
+                story: `# 🏦 La Forteresse de Données
+
+Au-delà de la Salle des Pactes s'étend la **Forteresse de Données**, où d'innombrables soldes d'utilisateurs sont stockés et protégés.
+
+*"Un seul solde est trivial,"* dit l'Architecte du Coffre. *"En gérer beaucoup — voilà l'art de l'architecture de stockage."*
+
+## Ta Mission
+
+Construis un contrat de coffre qui gère plusieurs soldes d'utilisateurs :
+- \`deposit\` — ajoute des fonds au solde d'un utilisateur (l'utilisateur doit s'authentifier)
+- \`withdraw\` — retire des fonds du solde d'un utilisateur (l'utilisateur doit s'authentifier)
+- \`get_balance\` — renvoie le solde actuel d'un utilisateur
+
+## Ce Que Tu Apprendras
+
+- \`Map<Address, i128>\` pour un état multi-utilisateur
+- \`Env::require_auth()\` pour l'autorisation par utilisateur
+- Le stockage persistant avec des clés complexes
+- Les motifs d'arithmétique sûre
+
+## Concepts Clés
+
+\`\`\`rust
+// Map for multiple balances
+let mut balances: Map<Address, i128> = env.storage()
+    .instance()
+    .get(&BALANCES)
+    .unwrap_or(Map::new(&env));
+
+// Per-user auth
+user.require_auth();
+
+// Update and persist
+balances.set(user, &(current + amount));
+env.storage().instance().set(&BALANCES, &balances);
+\`\`\``,
+                learningGoal: 'Construis un coffre multi-utilisateur avec le motif de stockage Map',
+                hints: [
+                    'Utilise Map<Address, i128> pour stocker les soldes des utilisateurs',
+                    'Appelle user.require_auth() avant de modifier le solde d\'un utilisateur',
+                    'Lis le Map depuis le stockage avec .unwrap_or(Map::new(&env))',
+                    'Pour deposit : récupère le solde actuel, ajoute le montant, enregistre à nouveau',
+                ],
+            },
+            ja: {
+                title: '金庫番',
+                story: `# 🏦 データの砦
+
+協約の間を超えて**データの砦**が広がります。ここで無数のユーザー残高が保存され、保護されます。
+
+*"単一の残高は取るに足らないものだ,"* 金庫のアーキテクトが言います。*"多くを管理する — これはストレージアーキテクチャの芸術なのだ。"*
+
+## あなたの使命
+
+複数のユーザー残高を管理する金庫コントラクトを構築してください:
+- \`deposit\` — ユーザーの残高に資金を追加（ユーザーが認証される必要あり）
+- \`withdraw\` — ユーザーの残高から資金を差し引く（ユーザーが認証される必要あり）
+- \`get_balance\` — ユーザーの現在の残高を返す
+
+## これから学ぶこと
+
+- マルチユーザー状態用の\`Map<Address, i128>\`
+- ユーザーごとの認可用\`Env::require_auth()\`
+- 複雑なキーを持つ永続ストレージ
+- 安全な算術パターン
+
+## 重要なコンセプト
+
+\`\`\`rust
+// 複数残高用Map
+let mut balances: Map<Address, i128> = env.storage()
+    .instance()
+    .get(&BALANCES)
+    .unwrap_or(Map::new(&env));
+
+// ユーザーごとの認可
+user.require_auth();
+
+// 更新と永続化
+balances.set(user, &(current + amount));
+env.storage().instance().set(&BALANCES, &balances);
+\`\`\``,
+                learningGoal: 'Mapストレージパターンを使用したマルチユーザー金庫を構築する',
+                hints: [
+                    'Map<Address, i128>を使用してユーザー残高を保存',
+                    'ユーザー残高を変更する前にuser.require_auth()を呼び出す',
+                    '.unwrap_or(Map::new(&env))でストレージからMapを読み取る',
+                    'depositの場合: 現在の残高を取得、金額を追加、戻す',
+                ],
+            },
+        },
+        template: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Map, i128};
+
+const BALANCES: Symbol = symbol_short!("BALANCE");
+
+#[contract]
+pub struct VaultContract;
+
+#[contractimpl]
+impl VaultContract {
+    // TODO: Create 'deposit' function
+    // Parameters: env: Env, user: Address, amount: i128
+    // Should: require auth from user, read balances map,
+    //         add amount to user's balance, store updated map
+
+    // TODO: Create 'withdraw' function
+    // Parameters: env: Env, user: Address, amount: i128
+    // Should: require auth from user, read balances map,
+    //         subtract amount from user's balance, store updated map
+
+    // TODO: Create 'get_balance' function
+    // Parameters: env: Env, user: Address
+    // Returns: i128
+    // Should: read balances map and return user's balance (default 0)
+}`,
+        solution: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Map, i128};
+
+const BALANCES: Symbol = symbol_short!("BALANCE");
+
+#[contract]
+pub struct VaultContract;
+
+#[contractimpl]
+impl VaultContract {
+    pub fn deposit(env: Env, user: Address, amount: i128) {
+        user.require_auth();
+        let mut balances: Map<Address, i128> = env.storage()
+            .instance()
+            .get(&BALANCES)
+            .unwrap_or(Map::new(&env));
+        let current = balances.get(&user).unwrap_or(0);
+        balances.set(&user, &(current + amount));
+        env.storage().instance().set(&BALANCES, &balances);
+    }
+
+    pub fn withdraw(env: Env, user: Address, amount: i128) {
+        user.require_auth();
+        let mut balances: Map<Address, i128> = env.storage()
+            .instance()
+            .get(&BALANCES)
+            .unwrap_or(Map::new(&env));
+        let current = balances.get(&user).unwrap_or(0);
+        balances.set(&user, &(current - amount));
+        env.storage().instance().set(&BALANCES, &balances);
+    }
+
+    pub fn get_balance(env: Env, user: Address) -> i128 {
+        let balances: Map<Address, i128> = env.storage()
+            .instance()
+            .get(&BALANCES)
+            .unwrap_or(Map::new(&env));
+        balances.get(&user).unwrap_or(0)
+    }
+}`,
+        checks: [
+            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
+            { type: 'has_function', name: 'deposit', params: ['env', 'user', 'amount'], message: "Missing 'deposit' function" },
+            { type: 'has_function', name: 'withdraw', params: ['env', 'user', 'amount'], message: "Missing 'withdraw' function" },
+            { type: 'has_function', name: 'get_balance', params: ['env', 'user'], message: "Missing 'get_balance' function" },
+            { type: 'returns_type', function: 'get_balance', returnType: 'i128', message: "'get_balance' should return i128" },
+            { type: 'uses_type', typeName: 'Map', message: 'Must use Map type for balances' },
+            { type: 'uses_type', typeName: 'Address', message: 'Must use Address type' },
+            { type: 'contains_pattern', pattern: 'require_auth()', message: 'Must use require_auth()', description: 'require_auth()' },
+            { type: 'storage_operation', operation: 'set', message: 'Must use storage set' },
+            { type: 'storage_operation', operation: 'get', message: 'Must use storage get' },
+        ],
+        conceptsIntroduced: ['Map<Address, i128>', 'multi-user storage', 'complex state'],
+    },
+
+    {
+        id: 'event-emitter',
+        chapter: 4,
+        order: 9,
+        difficulty: 'intermediate',
+        xpReward: 300,
+        i18n: {
+            en: {
+                title: 'Event Emitter',
+                story: `# 📡 The Signal Beacon
+
+High atop the Data Fortress stands the **Signal Beacon**, broadcasting events across the Stellar network.
+
+*"Contracts that speak are contracts that are understood,"* says the Beacon Keeper. *"Events let the world know what happened."*
+
+## Your Mission
+
+Create a contract that stores key-value data and emits events for every state change:
+- \`set_value\` — stores a value and emits an event with the key and value
+- \`get_value\` — retrieves a stored value by key
+- \`get_all_keys\` — returns all stored keys
+
+## What You'll Learn
+
+- \`env.events().publish()\` for emitting events
+- \`Vec<Symbol>\` for dynamic key tracking
+- Event-driven contract architecture
+- Publish-subscribe patterns on Stellar
+
+## Key Concepts
+
+\`\`\`rust
+// Emit an event
+env.events().publish(
+    &symbol_short!("set_value"),
+    (key, value),
+);
+
+// Track keys in a Vec
+let mut keys = env.storage().instance()
+    .get(&KEYS)
+    .unwrap_or(Vec::new(&env));
+keys.push_back(key);
+\`\`\``,
+                learningGoal: 'Implement event emission in a key-value store contract',
+                hints: [
+                    'Use env.events().publish() with a topic Symbol and event data',
+                    'Use Vec<Symbol> to track all stored keys',
+                    'Push new keys with keys.push_back(key)',
+                ],
+            },
+            es: {
+                title: 'Emisor de Eventos',
+                story: `# 📡 La Baliza de Señales
+
+En lo alto de la Fortaleza de Datos se encuentra la **Baliza de Señales**, transmitiendo eventos a través de la red Stellar.
+
+*"Los contratos que hablan son contratos que se entienden,"* dice el Guardián de la Baliza. *"Los eventos permiten que el mundo sepa lo que ocurrió."*
+
+## Tu Misión
+
+Crea un contrato que almacene datos clave-valor y emita eventos por cada cambio de estado:
+- \`set_value\` — almacena un valor y emite un evento con la clave y el valor
+- \`get_value\` — recupera un valor almacenado por su clave
+- \`get_all_keys\` — devuelve todas las claves almacenadas
+
+## Lo Que Aprenderás
+
+- \`env.events().publish()\` para emitir eventos
+- \`Vec<Symbol>\` para seguimiento dinámico de claves
+- Arquitectura de contratos basada en eventos
+- Patrones de publicador-suscriptor en Stellar
+
+## Conceptos Clave
+
+\`\`\`rust
+// Emitir un evento
+env.events().publish(
+    &symbol_short!("set_value"),
+    (key, value),
+);
+
+// Rastrear claves en un Vec
+let mut keys = env.storage().instance()
+    .get(&KEYS)
+    .unwrap_or(Vec::new(&env));
+keys.push_back(key);
+\`\`\``,
+                learningGoal: 'Implementa emisión de eventos en un contrato de almacén clave-valor',
+                hints: [
+                    'Usa env.events().publish() con un tema Symbol y los datos del evento',
+                    'Usa Vec<Symbol> para rastrear todas las claves almacenadas',
+                    'Añade nuevas claves con keys.push_back(key)',
+                ],
+            },
+            fr: {
+                title: 'Émetteur d\'Événements',
+                story: `# 📡 La Balise de Signaux
+
+Tout en haut de la Forteresse de Données se dresse la **Balise de Signaux**, diffusant des événements à travers le réseau Stellar.
+
+*"Les contrats qui parlent sont des contrats que l'on comprend,"* dit le Gardien de la Balise. *"Les événements permettent au monde de savoir ce qui s'est passé."*
+
+## Ta Mission
+
+Crée un contrat qui stocke des données clé-valeur et émet des événements à chaque changement d'état :
+- \`set_value\` — stocke une valeur et émet un événement avec la clé et la valeur
+- \`get_value\` — récupère une valeur stockée par sa clé
+- \`get_all_keys\` — renvoie toutes les clés stockées
+
+## Ce Que Tu Apprendras
+
+- \`env.events().publish()\` pour émettre des événements
+- \`Vec<Symbol>\` pour le suivi dynamique des clés
+- L'architecture de contrats basée sur les événements
+- Les motifs de publication-abonnement sur Stellar
+
+## Concepts Clés
+
+\`\`\`rust
+// Emit an event
+env.events().publish(
+    &symbol_short!("set_value"),
+    (key, value),
+);
+
+// Track keys in a Vec
+let mut keys = env.storage().instance()
+    .get(&KEYS)
+    .unwrap_or(Vec::new(&env));
+keys.push_back(key);
+\`\`\``,
+                learningGoal: 'Implémente l\'émission d\'événements dans un contrat de stockage clé-valeur',
+                hints: [
+                    'Utilise env.events().publish() avec un sujet Symbol et les données de l\'événement',
+                    'Utilise Vec<Symbol> pour suivre toutes les clés stockées',
+                    'Ajoute de nouvelles clés avec keys.push_back(key)',
+                ],
+            },
+            ja: {
+                title: '事象の放射',
+                story: `# 📡 信号の灯台
+
+データの砦のてっぺんに立つ**信号の灯台**は、Stellarネットワーク中にイベントを放送しています。
+
+*"話す契約は理解される契約だ,"* 灯台の管理人が言います。*"イベントは世界に何が起きたかを知らせるのだ。"*
+
+## あなたの使命
+
+キー・バリューデータを保存し、状態変更ごとにイベントを発行するコントラクトを作成してください:
+- \`set_value\` — 値を保存し、キーと値を含むイベントを発行
+- \`get_value\` — キーで保存された値を取得
+- \`get_all_keys\` — すべての保存されたキーを返す
+
+## これから学ぶこと
+
+- イベント発行用\`env.events().publish()\`
+- 動的キー追跡用\`Vec<Symbol>\`
+- イベント駆動型コントラクトアーキテクチャ
+- Stellarのパブリッシュ・サブスクライブパターン
+
+## 重要なコンセプト
+
+\`\`\`rust
+// イベント発行
+env.events().publish(
+    &symbol_short!("set_value"),
+    (key, value),
+);
+
+// Vecでキーを追跡
+let mut keys = env.storage().instance()
+    .get(&KEYS)
+    .unwrap_or(Vec::new(&env));
+keys.push_back(key);
+\`\`\``,
+                learningGoal: 'キー・バリューストアコントラクトにイベント発行を実装する',
+                hints: [
+                    'env.events().publish()をトピックSymbolとイベントデータで使用',
+                    'Vec<Symbol>を使用してすべての保存されたキーを追跡',
+                    'keys.push_back(key)で新しいキーを追加',
+                ],
+            },
+        },
+        template: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol, Vec, IntoVal};
+
+const KEYS: Symbol = symbol_short!("KEYS");
+
+#[contract]
+pub struct EventContract;
+
+#[contractimpl]
+impl EventContract {
+    // TODO: Create 'set_value' function
+    // Parameters: env: Env, key: Symbol, value: u32
+    // Should: store the value, emit an event with topic "set_value"
+    //         containing (key, value), and track the key
+
+    // TODO: Create 'get_value' function
+    // Parameters: env: Env, key: Symbol
+    // Returns: u32
+    // Should: return the stored value (default 0)
+
+    // TODO: Create 'get_all_keys' function
+    // Parameters: env: Env
+    // Returns: Vec<Symbol>
+    // Should: return all tracked keys
+}`,
+        solution: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol, Vec, IntoVal};
+
+const KEYS: Symbol = symbol_short!("KEYS");
+
+#[contract]
+pub struct EventContract;
+
+#[contractimpl]
+impl EventContract {
+    pub fn set_value(env: Env, key: Symbol, value: u32) {
+        env.storage().instance().set(&key, &value);
+        env.events().publish(
+            &symbol_short!("set_value"),
+            (key.clone(), value),
+        );
+        let mut keys: Vec<Symbol> = env.storage().instance()
+            .get(&KEYS)
+            .unwrap_or(Vec::new(&env));
+        if !keys.contains(&key) {
+            keys.push_back(key);
+            env.storage().instance().set(&KEYS, &keys);
+        }
+    }
+
+    pub fn get_value(env: Env, key: Symbol) -> u32 {
+        env.storage().instance().get(&key).unwrap_or(0)
+    }
+
+    pub fn get_all_keys(env: Env) -> Vec<Symbol> {
+        env.storage().instance()
+            .get(&KEYS)
+            .unwrap_or(Vec::new(&env))
+    }
+}`,
+        checks: [
+            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
+            { type: 'has_function', name: 'set_value', params: ['env', 'key', 'value'], message: "Missing 'set_value' function" },
+            { type: 'has_function', name: 'get_value', params: ['env', 'key'], message: "Missing 'get_value' function" },
+            { type: 'has_function', name: 'get_all_keys', params: ['env'], message: "Missing 'get_all_keys' function" },
+            { type: 'returns_type', function: 'get_value', returnType: 'u32', message: "'get_value' should return u32" },
+            { type: 'returns_type', function: 'get_all_keys', returnType: 'Vec<Symbol>', message: "'get_all_keys' should return Vec<Symbol>" },
+            { type: 'contains_pattern', pattern: 'env.events().publish', message: 'Must use env.events().publish()', description: 'event publishing' },
+            { type: 'storage_operation', operation: 'set', message: 'Must use storage set' },
+            { type: 'storage_operation', operation: 'get', message: 'Must use storage get' },
+        ],
+        conceptsIntroduced: ['events', 'publish', 'Vec tracking', 'event-driven design'],
+    },
+
+    {
+        id: 'approval-manager',
+        chapter: 4,
+        order: 10,
+        difficulty: 'intermediate',
+        xpReward: 350,
+        i18n: {
+            en: {
+                title: 'Approval Manager',
+                story: `# ✋ The Chamber of Delegation
+
+Within the Data Fortress lies the **Chamber of Delegation**, where trust is formalized through allowances.
+
+*"You cannot always act yourself,"* explains the Delegation Master. *"Sometimes you must empower others to act on your behalf."*
+
+## Your Mission
+
+Build a contract that allows users to approve others to spend on their behalf:
+- \`approve\` — owner authorizes a spender for a given amount
+- \`transfer_from\` — spender transfers from owner to a recipient
+- \`allowance\` — check how much a spender is authorized to spend
+
+## What You'll Learn
+
+- Nested key-value patterns (owner -> spender -> allowance)
+- Delegated authorization
+- Dual-address storage keys
+- Allowance decrement pattern
+
+## Key Concepts
+
+\`\`\`rust
+// Compound storage key for allowances
+let allowance_key = (owner.clone(), spender.clone());
+env.storage().instance().set(&allowance_key, &amount);
+
+// Read nested allowance
+env.storage().instance().get(&(owner, spender))
+    .unwrap_or(0)
+\`\`\``,
+                learningGoal: 'Implement an allowance and delegated transfer system',
+                hints: [
+                    'Use a tuple (Address, Address) as a compound storage key',
+                    'In approve: store the allowance for (owner, spender) pair',
+                    'In transfer_from: require_auth from spender, check allowance, decrement it, update balances',
+                ],
+            },
+            es: {
+                title: 'Gestor de Aprobaciones',
+                story: `# ✋ La Cámara de la Delegación
+
+Dentro de la Fortaleza de Datos yace la **Cámara de la Delegación**, donde la confianza se formaliza mediante autorizaciones.
+
+*"No siempre puedes actuar tú mismo,"* explica el Maestro de la Delegación. *"A veces debes empoderar a otros para que actúen en tu nombre."*
+
+## Tu Misión
+
+Construye un contrato que permita a los usuarios aprobar a otros para gastar en su nombre:
+- \`approve\` — el propietario autoriza a un gastador por un monto determinado
+- \`transfer_from\` — el gastador transfiere del propietario a un destinatario
+- \`allowance\` — consulta cuánto está autorizado a gastar un gastador
+
+## Lo Que Aprenderás
+
+- Patrones de clave-valor anidados (propietario -> gastador -> autorización)
+- Autorización delegada
+- Claves de almacenamiento con direcciones duales
+- Patrón de decremento de autorización
+
+## Conceptos Clave
+
+\`\`\`rust
+// Clave de almacenamiento compuesta para autorizaciones
+let allowance_key = (owner.clone(), spender.clone());
+env.storage().instance().set(&allowance_key, &amount);
+
+// Leer autorización anidada
+env.storage().instance().get(&(owner, spender))
+    .unwrap_or(0)
+\`\`\``,
+                learningGoal: 'Implementa un sistema de autorización y transferencia delegada',
+                hints: [
+                    'Usa una tupla (Address, Address) como clave de almacenamiento compuesta',
+                    'En approve: almacena la autorización para el par (owner, spender)',
+                    'En transfer_from: require_auth del spender, verifica autorización, decrementa, actualiza saldos',
+                ],
+            },
+            fr: {
+                title: 'Gestionnaire d\'Approbations',
+                story: `# ✋ La Chambre de la Délégation
+
+Au sein de la Forteresse de Données repose la **Chambre de la Délégation**, où la confiance se formalise par des allocations.
+
+*"Tu ne peux pas toujours agir toi-même,"* explique le Maître de la Délégation. *"Parfois, tu dois habiliter les autres à agir en ton nom."*
+
+## Ta Mission
+
+Construis un contrat qui permet aux utilisateurs d'autoriser d'autres à dépenser en leur nom :
+- \`approve\` — le propriétaire autorise un dépensier pour un montant donné
+- \`transfer_from\` — le dépensier transfère du propriétaire vers un destinataire
+- \`allowance\` — vérifie combien un dépensier est autorisé à dépenser
+
+## Ce Que Tu Apprendras
+
+- Les motifs clé-valeur imbriqués (propriétaire -> dépensier -> allocation)
+- L'autorisation déléguée
+- Les clés de stockage à double adresse
+- Le motif de décrémentation d'allocation
+
+## Concepts Clés
+
+\`\`\`rust
+// Compound storage key for allowances
+let allowance_key = (owner.clone(), spender.clone());
+env.storage().instance().set(&allowance_key, &amount);
+
+// Read nested allowance
+env.storage().instance().get(&(owner, spender))
+    .unwrap_or(0)
+\`\`\``,
+                learningGoal: 'Implémente un système d\'allocation et de transfert délégué',
+                hints: [
+                    'Utilise un tuple (Address, Address) comme clé de stockage composée',
+                    'Dans approve : stocke l\'allocation pour la paire (owner, spender)',
+                    'Dans transfer_from : require_auth du spender, vérifie l\'allocation, décrémente-la, mets à jour les soldes',
+                ],
+            },
+            ja: {
+                title: '許可管理者',
+                story: `# ✋ 委譲の間
+
+データの砦の中に**委譲の間**があります。ここで信頼は指定によって形式化されます。
+
+*"常に自分自身で行動することはできない,"* 委譲の主人が説明します。*"時には他の者に自分の名前で行動する力を与える必要があるのだ。"*
+
+## あなたの使命
+
+ユーザーが他の者に自分の代わりに支出するよう承認できるコントラクトを構築してください:
+- \`approve\` — オーナーは指定された金額で支出者を認可
+- \`transfer_from\` — 支出者はオーナーから受取人に転送
+- \`allowance\` — 支出者がいくら支出するよう認可されているかを確認
+
+## これから学ぶこと
+
+- ネストされたキー・バリューパターン（owner -> spender -> allowance）
+- 委譲された認可
+- 二重アドレス・ストレージキー
+- 指定額減少パターン
+
+## 重要なコンセプト
+
+\`\`\`rust
+// 指定用複合ストレージキー
+let allowance_key = (owner.clone(), spender.clone());
+env.storage().instance().set(&allowance_key, &amount);
+
+// ネストされた指定を読み取る
+env.storage().instance().get(&(owner, spender))
+    .unwrap_or(0)
+\`\`\``,
+                learningGoal: '指定と委譲転送システムを実装する',
+                hints: [
+                    'タプル(Address, Address)を複合ストレージキーとして使用',
+                    'approveで: (owner, spender)ペアの指定を保存',
+                    'transfer_fromで: spenderからrequire_auth、指定を確認、減少、残高更新',
+                ],
+            },
+        },
+        template: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
+
+#[contract]
+pub struct ApprovalContract;
+
+#[contractimpl]
+impl ApprovalContract {
+    // TODO: Create 'approve' function
+    // Parameters: env: Env, owner: Address, spender: Address, amount: i128
+    // Should: require auth from owner, store allowance for (owner, spender)
+
+    // TODO: Create 'transfer_from' function
+    // Parameters: env: Env, owner: Address, spender: Address, to: Address, amount: i128
+    // Should: require auth from spender, check allowance >= amount,
+    //         decrement allowance, update balances
+
+    // TODO: Create 'allowance' function
+    // Parameters: env: Env, owner: Address, spender: Address
+    // Returns: i128
+    // Should: return the stored allowance (default 0)
+}`,
+        solution: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
+
+#[contract]
+pub struct ApprovalContract;
+
+#[contractimpl]
+impl ApprovalContract {
+    pub fn approve(env: Env, owner: Address, spender: Address, amount: i128) {
+        owner.require_auth();
+        env.storage().instance().set(&(owner, spender), &amount);
+    }
+
+    pub fn transfer_from(env: Env, owner: Address, spender: Address, to: Address, amount: i128) {
+        spender.require_auth();
+        let current: i128 = env.storage().instance().get(&(owner.clone(), spender.clone())).unwrap_or(0);
+        env.storage().instance().set(&(owner.clone(), spender.clone()), &(current - amount));
+        let owner_bal: i128 = env.storage().instance().get(&owner).unwrap_or(0);
+        let to_bal: i128 = env.storage().instance().get(&to).unwrap_or(0);
+        env.storage().instance().set(&owner, &(owner_bal - amount));
+        env.storage().instance().set(&to, &(to_bal + amount));
+    }
+
+    pub fn allowance(env: Env, owner: Address, spender: Address) -> i128 {
+        env.storage().instance().get(&(owner, spender)).unwrap_or(0)
+    }
+}`,
+        checks: [
+            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
+            { type: 'has_function', name: 'approve', params: ['env', 'owner', 'spender', 'amount'], message: "Missing 'approve' function" },
+            { type: 'has_function', name: 'transfer_from', params: ['env', 'owner', 'spender', 'to', 'amount'], message: "Missing 'transfer_from' function" },
+            { type: 'has_function', name: 'allowance', params: ['env', 'owner', 'spender'], message: "Missing 'allowance' function" },
+            { type: 'returns_type', function: 'allowance', returnType: 'i128', message: "'allowance' should return i128" },
+            { type: 'contains_pattern', pattern: 'require_auth()', message: 'Must use require_auth()', description: 'require_auth()' },
+            { type: 'storage_operation', operation: 'set', message: 'Must use storage set' },
+            { type: 'storage_operation', operation: 'get', message: 'Must use storage get' },
+        ],
+        conceptsIntroduced: ['compound storage keys', 'delegated authorization', 'allowance pattern'],
+    },
+
+/* ==========================================
+   Chapter 5: Advanced Protocols
+   ========================================== */
+
+    {
+        id: 'crowdfund',
+        chapter: 5,
+        order: 11,
+        difficulty: 'intermediate',
+        xpReward: 350,
+        i18n: {
+            en: {
+                title: 'Crowdfund Campaign',
+                story: `# 🎯 The Crowdforge Arena
+
+You enter the **Crowdforge Arena**, where collective power brings ideas to life.
+
+*"Alone you are strong,"* announces the Auctioneer. *"Together, you can move stars. Build a campaign that the people can fund."*
+
+## Your Mission
+
+Create a crowdfunding contract:
+- \`init\` — sets the funding goal and deadline (ledger sequence)
+- \`contribute\` — adds funds from a contributor
+- \`check_goal\` — returns true if total contributions >= goal
+- \`get_total_raised\` — returns the total funds raised
+
+## What You'll Learn
+
+- Ledger sequence for time-based deadlines
+- Escrow-like fund accumulation
+- Goal tracking with conditional checks
+- Multi-contributor state management
+
+## Key Concepts
+
+\`\`\`rust
+// Track total raised
+let total: i128 = env.storage().instance()
+    .get(&TOTAL_RAISED)
+    .unwrap_or(0);
+
+env.storage().instance().set(&TOTAL_RAISED, &(total + amount));
+
+// Check deadline
+let deadline: u32 = env.storage().instance()
+    .get(&DEADLINE)
+    .unwrap_or(0);
+if env.ledger().sequence() > deadline { panic!("Campaign ended"); }
+\`\`\``,
+                learningGoal: 'Build a crowdfunding contract with goal and deadline tracking',
+                hints: [
+                    'In init: store the goal amount and deadline ledger sequence',
+                    'In contribute: check deadline has not passed, add amount to total',
+                    'In check_goal: compare total raised against the goal',
+                ],
+            },
+            es: {
+                title: 'Campaña de Crowdfunding',
+                story: `# 🎯 La Arena del Crowdforge
+
+Entras en la **Arena del Crowdforge**, donde el poder colectivo da vida a las ideas.
+
+*"Solo eres fuerte,"* anuncia el Subastador. *"Juntos, podéis mover estrellas. Construye una campaña que la gente pueda financiar."*
+
+## Tu Misión
+
+Crea un contrato de crowdfunding:
+- \`init\` — establece el objetivo de financiación y la fecha límite (secuencia del ledger)
+- \`contribute\` — añade fondos de un contribuyente
+- \`check_goal\` — devuelve true si las contribuciones totales >= objetivo
+- \`get_total_raised\` — devuelve el total de fondos recaudados
+
+## Lo Que Aprenderás
+
+- Secuencia del ledger para plazos basados en tiempo
+- Acumulación de fondos tipo escrow
+- Seguimiento de objetivos con comprobaciones condicionales
+- Gestión de estado con múltiples contribuyentes
+
+## Conceptos Clave
+
+\`\`\`rust
+// Rastrear el total recaudado
+let total: i128 = env.storage().instance()
+    .get(&TOTAL_RAISED)
+    .unwrap_or(0);
+
+env.storage().instance().set(&TOTAL_RAISED, &(total + amount));
+
+// Verificar fecha límite
+let deadline: u32 = env.storage().instance()
+    .get(&DEADLINE)
+    .unwrap_or(0);
+if env.ledger().sequence() > deadline { panic!("Campaign ended"); }
+\`\`\``,
+                learningGoal: 'Construye un contrato de crowdfunding con seguimiento de objetivos y plazos',
+                hints: [
+                    'En init: almacena el monto objetivo y la secuencia del ledger de la fecha límite',
+                    'En contribute: verifica que la fecha límite no haya pasado, añade el monto al total',
+                    'En check_goal: compara el total recaudado contra el objetivo',
+                ],
+            },
+            fr: {
+                title: 'Campagne de Financement Participatif',
+                story: `# 🎯 L'Arène du Crowdforge
+
+Tu entres dans l'**Arène du Crowdforge**, où la puissance collective donne vie aux idées.
+
+*"Seul, tu es fort,"* annonce le Commissaire-priseur. *"Ensemble, vous pouvez déplacer des étoiles. Construis une campagne que le peuple peut financer."*
+
+## Ta Mission
+
+Crée un contrat de financement participatif :
+- \`init\` — définit l'objectif de financement et la date limite (séquence du grand livre)
+- \`contribute\` — ajoute des fonds d'un contributeur
+- \`check_goal\` — renvoie true si les contributions totales >= objectif
+- \`get_total_raised\` — renvoie le total des fonds collectés
+
+## Ce Que Tu Apprendras
+
+- La séquence du grand livre pour les échéances basées sur le temps
+- L'accumulation de fonds de type séquestre
+- Le suivi d'objectifs avec des vérifications conditionnelles
+- La gestion d'état avec plusieurs contributeurs
+
+## Concepts Clés
+
+\`\`\`rust
+// Track total raised
+let total: i128 = env.storage().instance()
+    .get(&TOTAL_RAISED)
+    .unwrap_or(0);
+
+env.storage().instance().set(&TOTAL_RAISED, &(total + amount));
+
+// Check deadline
+let deadline: u32 = env.storage().instance()
+    .get(&DEADLINE)
+    .unwrap_or(0);
+if env.ledger().sequence() > deadline { panic!("Campaign ended"); }
+\`\`\``,
+                learningGoal: 'Construis un contrat de financement participatif avec suivi d\'objectif et d\'échéance',
+                hints: [
+                    'Dans init : stocke le montant objectif et la séquence de grand livre de la date limite',
+                    'Dans contribute : vérifie que la date limite n\'est pas passée, ajoute le montant au total',
+                    'Dans check_goal : compare le total collecté à l\'objectif',
+                ],
+            },
+            ja: {
+                title: '群衆からの資金',
+                story: `# 🎯 Crowdforgeの競技場
+
+**Crowdforgeの競技場**に入ります。ここで集団的な力はアイデアに生命を与えます。
+
+*"単独ではお前は強いが,"* 競売人が発表します。*"一緒なら、お前たちは星を動かせるのだ。人々が資金提供できるキャンペーンを構築するのだ。"*
+
+## あなたの使命
+
+クラウドファンディングコントラクトを作成してください:
+- \`init\` — 資金調達目標と期限（レッジャーシーケンス）を設定
+- \`contribute\` — 貢献者からの資金を追加
+- \`check_goal\` — 総貢献度 >= 目標の場合trueを返す
+- \`get_total_raised\` — 集めた総資金を返す
+
+## これから学ぶこと
+
+- 時間ベースの期限用レッジャーシーケンス
+- エスクロー型資金累積
+- 条件付きチェックによる目標追跡
+- 複数貢献者との状態管理
+
+## 重要なコンセプト
+
+\`\`\`rust
+// 集めた総額を追跡
+let total: i128 = env.storage().instance()
+    .get(&TOTAL_RAISED)
+    .unwrap_or(0);
+
+env.storage().instance().set(&TOTAL_RAISED, &(total + amount));
+
+// 期限を確認
+let deadline: u32 = env.storage().instance()
+    .get(&DEADLINE)
+    .unwrap_or(0);
+if env.ledger().sequence() > deadline { panic!("Campaign ended"); }
+\`\`\``,
+                learningGoal: '目標と期限追跡を備えたクラウドファンディングコントラクトを構築する',
+                hints: [
+                    'initで: 目標金額と期限レッジャーシーケンスを保存',
+                    'contributeで: 期限が過ぎていないことを確認、金額を総計に追加',
+                    'check_goalで: 集めた総額を目標と比較',
+                ],
+            },
+        },
+        template: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol};
+
+const GOAL: Symbol = symbol_short!("GOAL");
+const DEADLINE: Symbol = symbol_short!("DEADLINE");
+const TOTAL_RAISED: Symbol = symbol_short!("TOTAL");
+
+#[contract]
+pub struct CrowdfundContract;
+
+#[contractimpl]
+impl CrowdfundContract {
+    // TODO: Create 'init' function
+    // Parameters: env: Env, goal: i128, deadline: u32
+    // Should: store the goal amount and deadline
+
+    // TODO: Create 'contribute' function
+    // Parameters: env: Env, amount: i128
+    // Should: check deadline not passed, add amount to total raised
+
+    // TODO: Create 'check_goal' function
+    // Parameters: env: Env
+    // Returns: bool
+    // Should: return true if total raised >= goal
+
+    // TODO: Create 'get_total_raised' function
+    // Parameters: env: Env
+    // Returns: i128
+    // Should: return the total raised so far
+}`,
+        solution: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol};
+
+const GOAL: Symbol = symbol_short!("GOAL");
+const DEADLINE: Symbol = symbol_short!("DEADLINE");
+const TOTAL_RAISED: Symbol = symbol_short!("TOTAL");
+
+#[contract]
+pub struct CrowdfundContract;
+
+#[contractimpl]
+impl CrowdfundContract {
+    pub fn init(env: Env, goal: i128, deadline: u32) {
+        env.storage().instance().set(&GOAL, &goal);
+        env.storage().instance().set(&DEADLINE, &deadline);
+    }
+
+    pub fn contribute(env: Env, amount: i128) {
+        let deadline: u32 = env.storage().instance().get(&DEADLINE).unwrap_or(0);
+        if env.ledger().sequence() > deadline {
+            panic!("Campaign ended");
+        }
+        let total: i128 = env.storage().instance().get(&TOTAL_RAISED).unwrap_or(0);
+        env.storage().instance().set(&TOTAL_RAISED, &(total + amount));
+    }
+
+    pub fn check_goal(env: Env) -> bool {
+        let total: i128 = env.storage().instance().get(&TOTAL_RAISED).unwrap_or(0);
+        let goal: i128 = env.storage().instance().get(&GOAL).unwrap_or(0);
+        total >= goal
+    }
+
+    pub fn get_total_raised(env: Env) -> i128 {
+        env.storage().instance().get(&TOTAL_RAISED).unwrap_or(0)
+    }
+}`,
+        checks: [
+            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
+            { type: 'has_function', name: 'init', params: ['env', 'goal', 'deadline'], message: "Missing 'init' function" },
+            { type: 'has_function', name: 'contribute', params: ['env', 'amount'], message: "Missing 'contribute' function" },
+            { type: 'has_function', name: 'check_goal', params: ['env'], message: "Missing 'check_goal' function" },
+            { type: 'has_function', name: 'get_total_raised', params: ['env'], message: "Missing 'get_total_raised' function" },
+            { type: 'returns_type', function: 'check_goal', returnType: 'bool', message: "'check_goal' should return bool" },
+            { type: 'returns_type', function: 'get_total_raised', returnType: 'i128', message: "'get_total_raised' should return i128" },
+            { type: 'contains_pattern', pattern: 'panic!', message: 'Must panic if deadline has passed', description: 'panic for deadline' },
+            { type: 'contains_pattern', pattern: 'ledger()', message: 'Must use env.ledger() for deadline check', description: 'ledger access' },
+            { type: 'storage_operation', operation: 'set', message: 'Must use storage set' },
+        ],
+        conceptsIntroduced: ['crowdfunding', 'deadline pattern', 'goal tracking', 'ledger sequence'],
+    },
+
+    {
+        id: 'escrow-agent',
+        chapter: 5,
+        order: 12,
+        difficulty: 'advanced',
+        xpReward: 400,
+        i18n: {
+            en: {
+                title: 'Escrow Agent',
+                story: `# 🤲 The Trust Exchange
+
+Deep within the Crowdforge Arena is the **Trust Exchange**, where transactions between strangers are mediated.
+
+*"Trust is the rarest currency,"* says the Escrow Mediator. *"Build a system that holds value until conditions are met."*
+
+## Your Mission
+
+Create an escrow contract with buyer, seller, and arbiter:
+- \`init\` — sets up the escrow with buyer, seller, and arbiter addresses
+- \`deposit\` — buyer deposits funds into escrow
+- \`release\` — arbiter releases funds to the seller
+- \`refund\` — arbiter refunds the buyer
+
+## What You'll Learn
+
+- Multi-party contract initialization
+- Three-actor authorization patterns
+- State machine for escrow lifecycle
+- Dispute resolution patterns
+
+## Key Concepts
+
+\`\`\`rust
+// Multi-party init
+pub fn init(env: Env, buyer: Address, seller: Address, arbiter: Address) {
+    env.storage().instance().set(&BUYER, &buyer);
+    env.storage().instance().set(&SELLER, &seller);
+    env.storage().instance().set(&ARBITER, &arbiter);
+}
+
+// Arbiter-only functions
+arbiter.require_auth();
+\`\`\``,
+                learningGoal: 'Implement a multi-party escrow contract with dispute resolution',
+                hints: [
+                    'In init: store buyer, seller, and arbiter addresses',
+                    'In deposit: require auth from buyer and store the amount',
+                    'In release: require auth from arbiter, transfer to seller',
+                    'In refund: require auth from arbiter, return to buyer',
+                ],
+            },
+            es: {
+                title: 'Agente de Escrow',
+                story: `# 🤲 El Intercambio de Confianza
+
+En lo profundo de la Arena del Crowdforge se encuentra el **Intercambio de Confianza**, donde se median las transacciones entre desconocidos.
+
+*"La confianza es la moneda más rara,"* dice el Mediador de Escrow. *"Construye un sistema que retenga valor hasta que se cumplan las condiciones."*
+
+## Tu Misión
+
+Crea un contrato de escrow con comprador, vendedor y árbitro:
+- \`init\` — configura el escrow con las direcciones del comprador, vendedor y árbitro
+- \`deposit\` — el comprador deposita fondos en el escrow
+- \`release\` — el árbitro libera los fondos al vendedor
+- \`refund\` — el árbitro reembolsa al comprador
+
+## Lo Que Aprenderás
+
+- Inicialización de contratos con múltiples partes
+- Patrones de autorización con tres actores
+- Máquina de estados para el ciclo de vida del escrow
+- Patrones de resolución de disputas
+
+## Conceptos Clave
+
+\`\`\`rust
+// Init con múltiples partes
+pub fn init(env: Env, buyer: Address, seller: Address, arbiter: Address) {
+    env.storage().instance().set(&BUYER, &buyer);
+    env.storage().instance().set(&SELLER, &seller);
+    env.storage().instance().set(&ARBITER, &arbiter);
+}
+
+// Funciones solo para el árbitro
+arbiter.require_auth();
+\`\`\``,
+                learningGoal: 'Implementa un contrato de escrow multipartito con resolución de disputas',
+                hints: [
+                    'En init: almacena las direcciones de comprador, vendedor y árbitro',
+                    'En deposit: require_auth del comprador y almacena el monto',
+                    'En release: require_auth del árbitro, transfiere al vendedor',
+                    'En refund: require_auth del árbitro, devuelve al comprador',
+                ],
+            },
+            fr: {
+                title: 'Agent de Séquestre',
+                story: `# 🤲 L'Échange de Confiance
+
+Au plus profond de l'Arène du Crowdforge se trouve l'**Échange de Confiance**, où les transactions entre inconnus sont arbitrées.
+
+*"La confiance est la monnaie la plus rare,"* dit le Médiateur du Séquestre. *"Construis un système qui retient la valeur jusqu'à ce que les conditions soient remplies."*
+
+## Ta Mission
+
+Crée un contrat de séquestre avec acheteur, vendeur et arbitre :
+- \`init\` — configure le séquestre avec les adresses de l'acheteur, du vendeur et de l'arbitre
+- \`deposit\` — l'acheteur dépose des fonds dans le séquestre
+- \`release\` — l'arbitre libère les fonds au vendeur
+- \`refund\` — l'arbitre rembourse l'acheteur
+
+## Ce Que Tu Apprendras
+
+- L'initialisation de contrats multipartites
+- Les motifs d'autorisation à trois acteurs
+- La machine à états pour le cycle de vie du séquestre
+- Les motifs de résolution de litiges
+
+## Concepts Clés
+
+\`\`\`rust
+// Multi-party init
+pub fn init(env: Env, buyer: Address, seller: Address, arbiter: Address) {
+    env.storage().instance().set(&BUYER, &buyer);
+    env.storage().instance().set(&SELLER, &seller);
+    env.storage().instance().set(&ARBITER, &arbiter);
+}
+
+// Arbiter-only functions
+arbiter.require_auth();
+\`\`\``,
+                learningGoal: 'Implémente un contrat de séquestre multipartite avec résolution de litiges',
+                hints: [
+                    'Dans init : stocke les adresses de l\'acheteur, du vendeur et de l\'arbitre',
+                    'Dans deposit : require_auth de l\'acheteur et stocke le montant',
+                    'Dans release : require_auth de l\'arbitre, transfère au vendeur',
+                    'Dans refund : require_auth de l\'arbitre, rembourse à l\'acheteur',
+                ],
+            },
+            ja: {
+                title: 'エスクローの使者',
+                story: `# 🤲 信頼の交換
+
+Crowdforgeの競技場の奥深くには**信頼の交換**があります。ここで見知らぬ者間の取引が仲介されます。
+
+*"信頼はもっとも希少な通貨だ,"* エスクロー仲介者が言います。*"条件が満たされるまで価値を保持するシステムを構築するのだ。"*
+
+## あなたの使命
+
+買い手、売り手、仲介者を持つエスクロー契約を作成してください:
+- \`init\` — 買い手、売り手、仲介者のアドレスでエスクローを設定
+- \`deposit\` — 買い手がエスクローに資金を預ける
+- \`release\` — 仲介者が売り手へ資金を解放
+- \`refund\` — 仲介者が買い手に払い戻す
+
+## これから学ぶこと
+
+- マルチパーティコントラクト初期化
+- 3者認可パターン
+- エスクロー・ライフサイクル用ステートマシン
+- 紛争解決パターン
+
+## 重要なコンセプト
+
+\`\`\`rust
+// マルチパーティ初期化
+pub fn init(env: Env, buyer: Address, seller: Address, arbiter: Address) {
+    env.storage().instance().set(&BUYER, &buyer);
+    env.storage().instance().set(&SELLER, &seller);
+    env.storage().instance().set(&ARBITER, &arbiter);
+}
+
+// 仲介者のみの機能
+arbiter.require_auth();
+\`\`\``,
+                learningGoal: '紛争解決を備えたマルチパーティエスクロー契約を実装する',
+                hints: [
+                    'initで: 買い手、売り手、仲介者のアドレスを保存',
+                    'depositで: 買い手からrequire_auth、金額を保存',
+                    'releaseで: 仲介者からrequire_auth、売り手に転送',
+                    'refundで: 仲介者からrequire_auth、買い手に払い戻す',
+                ],
+            },
+        },
+        template: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
+
+const BUYER: Symbol = symbol_short!("BUYER");
+const SELLER: Symbol = symbol_short!("SELLER");
+const ARBITER: Symbol = symbol_short!("ARBITER");
+const DEPOSIT: Symbol = symbol_short!("DEPOSIT");
+
+#[contract]
+pub struct EscrowContract;
+
+#[contractimpl]
+impl EscrowContract {
+    // TODO: Create 'init' function
+    // Parameters: env: Env, buyer: Address, seller: Address, arbiter: Address
+    // Should: store all three addresses
+
+    // TODO: Create 'deposit' function
+    // Parameters: env: Env, amount: i128
+    // Should: require auth from buyer, store the deposit amount
+
+    // TODO: Create 'release' function
+    // Parameters: env: Env
+    // Should: require auth from arbiter, return stored deposit amount
+    // (simulating release to seller)
+
+    // TODO: Create 'refund' function
+    // Parameters: env: Env
+    // Should: require auth from arbiter, return stored deposit amount
+    // (simulating refund to buyer)
+}`,
+        solution: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
+
+const BUYER: Symbol = symbol_short!("BUYER");
+const SELLER: Symbol = symbol_short!("SELLER");
+const ARBITER: Symbol = symbol_short!("ARBITER");
+const DEPOSIT: Symbol = symbol_short!("DEPOSIT");
+
+#[contract]
+pub struct EscrowContract;
+
+#[contractimpl]
+impl EscrowContract {
+    pub fn init(env: Env, buyer: Address, seller: Address, arbiter: Address) {
+        env.storage().instance().set(&BUYER, &buyer);
+        env.storage().instance().set(&SELLER, &seller);
+        env.storage().instance().set(&ARBITER, &arbiter);
+    }
+
+    pub fn deposit(env: Env, amount: i128) {
+        let buyer: Address = env.storage().instance().get(&BUYER).unwrap();
+        buyer.require_auth();
+        env.storage().instance().set(&DEPOSIT, &amount);
+    }
+
+    pub fn release(env: Env) -> i128 {
+        let arbiter: Address = env.storage().instance().get(&ARBITER).unwrap();
+        arbiter.require_auth();
+        let amount: i128 = env.storage().instance().get(&DEPOSIT).unwrap_or(0);
+        env.storage().instance().remove(&DEPOSIT);
+        amount
+    }
+
+    pub fn refund(env: Env) -> i128 {
+        let arbiter: Address = env.storage().instance().get(&ARBITER).unwrap();
+        arbiter.require_auth();
+        let amount: i128 = env.storage().instance().get(&DEPOSIT).unwrap_or(0);
+        env.storage().instance().remove(&DEPOSIT);
+        amount
+    }
+}`,
+        checks: [
+            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
+            { type: 'has_function', name: 'init', params: ['env', 'buyer', 'seller', 'arbiter'], message: "Missing 'init' function" },
+            { type: 'has_function', name: 'deposit', params: ['env', 'amount'], message: "Missing 'deposit' function" },
+            { type: 'has_function', name: 'release', params: ['env'], message: "Missing 'release' function" },
+            { type: 'has_function', name: 'refund', params: ['env'], message: "Missing 'refund' function" },
+            { type: 'returns_type', function: 'release', returnType: 'i128', message: "'release' should return i128" },
+            { type: 'returns_type', function: 'refund', returnType: 'i128', message: "'refund' should return i128" },
+            { type: 'uses_type', typeName: 'Address', message: 'Must use Address type' },
+            { type: 'contains_pattern', pattern: 'require_auth()', message: 'Must use require_auth()', description: 'require_auth()' },
+            { type: 'storage_operation', operation: 'set', message: 'Must use storage set' },
+            { type: 'storage_operation', operation: 'get', message: 'Must use storage get' },
+        ],
+        conceptsIntroduced: ['multi-party init', 'escrow pattern', 'dispute resolution', 'state machine'],
+    },
+
+    {
+        id: 'subscription',
+        chapter: 5,
+        order: 13,
+        difficulty: 'advanced',
+        xpReward: 400,
+        i18n: {
+            en: {
+                title: 'Subscription Manager',
+                story: `# 🔄 The Recurring Engine
+
+At the heart of the Advanced Protocols district hums the **Recurring Engine**, powering automated periodic agreements.
+
+*"The most powerful contracts are those that work without constant attention,"* says the Engine Tender. *"Build a subscription that collects recurring payments."*
+
+## Your Mission
+
+Create a subscription management contract:
+- \`subscribe\` — user subscribes to a plan (stores plan, next billing)
+- \`collect\` — collects the subscription fee if billing is due
+- \`cancel\` — cancels the subscription
+- \`get_subscription\` — returns subscription info for a user
+
+## What You'll Learn
+
+- Recurring billing logic with ledger sequence
+- Subscription state management
+- Cancel and refund patterns
+- Time-interval calculations
+
+## Key Concepts
+
+\`\`\`rust
+// Track subscription period
+let interval: u32 = 1000; // billing every ~1000 ledgers
+let next_billing: u32 = env.ledger().sequence() + interval;
+
+// Check if billing is due
+if env.ledger().sequence() >= next_billing {
+    // collect payment
+}
+\`\`\``,
+                learningGoal: 'Build a recurring subscription contract with periodic billing',
+                hints: [
+                    'In subscribe: store the plan, set next_billing to current sequence + interval',
+                    'In collect: check if current sequence >= next_billing, if so collect and update next_billing',
+                    'In cancel: clear subscription data from storage',
+                ],
+            },
+            es: {
+                title: 'Gestor de Suscripciones',
+                story: `# 🔄 El Motor Recurrente
+
+En el corazón del distrito de Protocolos Avanzados palpita el **Motor Recurrente**, alimentando acuerdos periódicos automatizados.
+
+*"Los contratos más poderosos son los que funcionan sin atención constante,"* dice el Cuidador del Motor. *"Construye una suscripción que cobre pagos recurrentes."*
+
+## Tu Misión
+
+Crea un contrato de gestión de suscripciones:
+- \`subscribe\` — el usuario se suscribe a un plan (almacena plan, próxima facturación)
+- \`collect\` — cobra la cuota de suscripción si la facturación está vencida
+- \`cancel\` — cancela la suscripción
+- \`get_subscription\` — devuelve la información de suscripción de un usuario
+
+## Lo Que Aprenderás
+
+- Lógica de facturación recurrente con secuencia del ledger
+- Gestión de estado de suscripciones
+- Patrones de cancelación y reembolso
+- Cálculos de intervalos de tiempo
+
+## Conceptos Clave
+
+\`\`\`rust
+// Rastrear período de suscripción
+let interval: u32 = 1000; // facturación cada ~1000 ledgers
+let next_billing: u32 = env.ledger().sequence() + interval;
+
+// Verificar si la facturación está vencida
+if env.ledger().sequence() >= next_billing {
+    // cobrar pago
+}
+\`\`\``,
+                learningGoal: 'Construye un contrato de suscripción recurrente con facturación periódica',
+                hints: [
+                    'En subscribe: almacena el plan, establece next_billing a sequence + intervalo',
+                    'En collect: verifica si sequence >= next_billing, si es así cobra y actualiza next_billing',
+                    'En cancel: limpia los datos de suscripción del almacenamiento',
+                ],
+            },
+            fr: {
+                title: 'Gestionnaire d\'Abonnements',
+                story: `# 🔄 Le Moteur Récurrent
+
+Au cœur du district des Protocoles Avancés ronronne le **Moteur Récurrent**, alimentant des accords périodiques automatisés.
+
+*"Les contrats les plus puissants sont ceux qui fonctionnent sans attention constante,"* dit le Gardien du Moteur. *"Construis un abonnement qui collecte des paiements récurrents."*
+
+## Ta Mission
+
+Crée un contrat de gestion d'abonnements :
+- \`subscribe\` — l'utilisateur s'abonne à un plan (stocke le plan, la prochaine facturation)
+- \`collect\` — collecte les frais d'abonnement si la facturation est due
+- \`cancel\` — annule l'abonnement
+- \`get_subscription\` — renvoie les informations d'abonnement d'un utilisateur
+
+## Ce Que Tu Apprendras
+
+- La logique de facturation récurrente avec la séquence du grand livre
+- La gestion de l'état des abonnements
+- Les motifs d'annulation et de remboursement
+- Les calculs d'intervalles de temps
+
+## Concepts Clés
+
+\`\`\`rust
+// Track subscription period
+let interval: u32 = 1000; // billing every ~1000 ledgers
+let next_billing: u32 = env.ledger().sequence() + interval;
+
+// Check if billing is due
+if env.ledger().sequence() >= next_billing {
+    // collect payment
+}
+\`\`\``,
+                learningGoal: 'Construis un contrat d\'abonnement récurrent avec facturation périodique',
+                hints: [
+                    'Dans subscribe : stocke le plan, définis next_billing à sequence + intervalle',
+                    'Dans collect : vérifie si sequence >= next_billing, si c\'est le cas collecte et mets à jour next_billing',
+                    'Dans cancel : nettoie les données d\'abonnement du stockage',
+                ],
+            },
+            ja: {
+                title: '継続の契約',
+                story: `# 🔄 周期エンジン
+
+先進プロトコルの地区の中核に**周期エンジン**が鼓動しています。自動化された周期的な協約に電力を供給しています。
+
+*"最も強力なコントラクトは、注意を払わずに機能するもだ,"* エンジンの番人が言います。*"定期的な支払いを集めるサブスクリプションを構築するのだ。"*
+
+## あなたの使命
+
+サブスクリプション管理コントラクトを作成してください:
+- \`subscribe\` — ユーザーがプランを購読（プラン、次の請求を保存）
+- \`collect\` — 請求が期限切れの場合、サブスクリプション料金を徴収
+- \`cancel\` — サブスクリプションをキャンセル
+- \`get_subscription\` — ユーザーのサブスクリプション情報を返す
+
+## これから学ぶこと
+
+- レッジャーシーケンス付き定期請求ロジック
+- サブスクリプション状態管理
+- キャンセルと払い戻しパターン
+- 時間間隔計算
+
+## 重要なコンセプト
+
+\`\`\`rust
+// サブスクリプション期間を追跡
+let interval: u32 = 1000; // 約1000レッジャーごとに請求
+let next_billing: u32 = env.ledger().sequence() + interval;
+
+// 請求が期限切れかを確認
+if env.ledger().sequence() >= next_billing {
+    // 支払いを徴収
+}
+\`\`\``,
+                learningGoal: '定期請求を備えた定期サブスクリプションコントラクトを構築する',
+                hints: [
+                    'subscribeで: プランを保存、next_billingをsequence + intervalに設定',
+                    'collectで: sequence >= next_billingを確認、その場合は徴収して更新',
+                    'cancelで: ストレージからサブスクリプションデータをクリア',
+                ],
+            },
+        },
+        template: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
+
+const PLAN: Symbol = symbol_short!("PLAN");
+const NEXT_BILLING: Symbol = symbol_short!("NEXT_BILL");
+const ACTIVE: Symbol = symbol_short!("ACTIVE");
+const INTERVAL: u32 = 1000;
+
+#[contract]
+pub struct SubscriptionContract;
+
+#[contractimpl]
+impl SubscriptionContract {
+    // TODO: Create 'subscribe' function
+    // Parameters: env: Env, user: Address, plan: Symbol
+    // Should: require auth, store plan, set next billing to current seq + INTERVAL, mark active
+
+    // TODO: Create 'collect' function
+    // Parameters: env: Env, user: Address
+    // Returns: i128
+    // Should: check active, check billing due, simulate collection, update next billing
+
+    // TODO: Create 'cancel' function
+    // Parameters: env: Env, user: Address
+    // Should: require auth, clear subscription data (set active to false or remove)
+
+    // TODO: Create 'get_subscription' function
+    // Parameters: env: Env, user: Address
+    // Returns: Symbol
+    // Should: return the plan symbol (or "None" if not active)
+}`,
+        solution: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
+
+const PLAN: Symbol = symbol_short!("PLAN");
+const NEXT_BILLING: Symbol = symbol_short!("NEXT_BILL");
+const ACTIVE: Symbol = symbol_short!("ACTIVE");
+const INTERVAL: u32 = 1000;
+
+#[contract]
+pub struct SubscriptionContract;
+
+#[contractimpl]
+impl SubscriptionContract {
+    pub fn subscribe(env: Env, user: Address, plan: Symbol) {
+        user.require_auth();
+        let next_billing = env.ledger().sequence() + INTERVAL;
+        env.storage().instance().set(&(user.clone(), PLAN), &plan);
+        env.storage().instance().set(&(user.clone(), NEXT_BILLING), &next_billing);
+        env.storage().instance().set(&(user, ACTIVE), &true);
+    }
+
+    pub fn collect(env: Env, user: Address) -> i128 {
+        let active: bool = env.storage().instance().get(&(user.clone(), ACTIVE)).unwrap_or(false);
+        if !active { panic!("No active subscription"); }
+        let next_billing: u32 = env.storage().instance().get(&(user.clone(), NEXT_BILLING)).unwrap_or(0);
+        if env.ledger().sequence() < next_billing { panic!("Not yet due"); }
+        let new_next = env.ledger().sequence() + INTERVAL;
+        env.storage().instance().set(&(user, NEXT_BILLING), &new_next);
+        100
+    }
+
+    pub fn cancel(env: Env, user: Address) {
+        user.require_auth();
+        env.storage().instance().set(&(user.clone(), ACTIVE), &false);
+        env.storage().instance().remove(&(user.clone(), PLAN));
+        env.storage().instance().remove(&(user, NEXT_BILLING));
+    }
+
+    pub fn get_subscription(env: Env, user: Address) -> Symbol {
+        let active: bool = env.storage().instance().get(&(user.clone(), ACTIVE)).unwrap_or(false);
+        if !active { return symbol_short!("None"); }
+        env.storage().instance().get(&(user, PLAN)).unwrap_or(symbol_short!("None"))
+    }
+}`,
+        checks: [
+            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
+            { type: 'has_function', name: 'subscribe', params: ['env', 'user', 'plan'], message: "Missing 'subscribe' function" },
+            { type: 'has_function', name: 'collect', params: ['env', 'user'], message: "Missing 'collect' function" },
+            { type: 'has_function', name: 'cancel', params: ['env', 'user'], message: "Missing 'cancel' function" },
+            { type: 'has_function', name: 'get_subscription', params: ['env', 'user'], message: "Missing 'get_subscription' function" },
+            { type: 'returns_type', function: 'get_subscription', returnType: 'Symbol', message: "'get_subscription' should return Symbol" },
+            { type: 'contains_pattern', pattern: 'require_auth()', message: 'Must use require_auth()', description: 'require_auth()' },
+            { type: 'contains_pattern', pattern: 'panic!', message: 'Must use panic for error conditions', description: 'panic for errors' },
+            { type: 'storage_operation', operation: 'set', message: 'Must use storage set' },
+            { type: 'storage_operation', operation: 'get', message: 'Must use storage get' },
+        ],
+        conceptsIntroduced: ['recurring billing', 'subscription state', 'time-interval pattern', 'cancel pattern'],
+    },
+
+/* ==========================================
+   Chapter 6: Production Systems
+   ========================================== */
+
+    {
+        id: 'flash-loan',
+        chapter: 6,
+        order: 14,
+        difficulty: 'advanced',
+        xpReward: 450,
+        i18n: {
+            en: {
+                title: 'Flash Loan Pool',
+                story: `# ⚡ The Lightning Vault
+
+In the deepest layer of the Citadel lies the **Lightning Vault**, where capital moves at the speed of light.
+
+*"Flash loans are the ultimate test of contract design,"* says the Lightning Archon. *"Borrow, use, and repay in a single transaction."*
+
+## Your Mission
+
+Build a simplified flash loan pool:
+- \`init\` — sets the pool balance
+- \`flash_loan\` — borrows from the pool (must repay within the call)
+- \`get_pool_balance\` — returns the current pool balance
+- \`repay\` — repays the borrowed amount plus a small fee
+
+## What You'll Learn
+
+- Flash loan mechanics (simplified for validation)
+- Pool balance management
+- Loan lifecycle tracking
+- Fee-on-repay patterns
+
+## Key Concepts
+
+\`\`\`rust
+// Track active loan
+let loan: i128 = env.storage().instance()
+    .get(&(borrower.clone(), LOAN_AMOUNT))
+    .unwrap_or(0);
+
+// Repay with fee
+let fee = amount / 100; // 1% fee
+env.storage().instance().set(&POOL, &(pool_bal + amount + fee));
+\`\`\``,
+                learningGoal: 'Build a simplified flash loan pool contract',
+                hints: [
+                    'In init: store the initial pool balance',
+                    'In flash_loan: check pool has enough, deduct from pool, record the loan',
+                    'In repay: check loan exists, add funds plus fee back to pool, clear loan',
+                ],
+            },
+            es: {
+                title: 'Pool de Préstamos Flash',
+                story: `# ⚡ La Bóveda del Relámpago
+
+En la capa más profunda de la Ciudadela yace la **Bóveda del Relámpago**, donde el capital se mueve a la velocidad de la luz.
+
+*"Los préstamos flash son la prueba definitiva del diseño de contratos,"* dice el Arquero del Relámpago. *"Pide prestado, úsalo y devuélvelo en una sola transacción."*
+
+## Tu Misión
+
+Construye un pool de préstamos flash simplificado:
+- \`init\` — establece el saldo del pool
+- \`flash_loan\` — pide prestado del pool (debe devolverse dentro de la llamada)
+- \`get_pool_balance\` — devuelve el saldo actual del pool
+- \`repay\` — devuelve el monto prestado más una pequeña comisión
+
+## Lo Que Aprenderás
+
+- Mecánica de préstamos flash (simplificada para validación)
+- Gestión del saldo del pool
+- Seguimiento del ciclo de vida del préstamo
+- Patrones de comisión al devolver
+
+## Conceptos Clave
+
+\`\`\`rust
+// Rastrear préstamo activo
+let loan: i128 = env.storage().instance()
+    .get(&(borrower.clone(), LOAN_AMOUNT))
+    .unwrap_or(0);
+
+// Devolver con comisión
+let fee = amount / 100; // 1% de comisión
+env.storage().instance().set(&POOL, &(pool_bal + amount + fee));
+\`\`\``,
+                learningGoal: 'Construye un contrato de pool de préstamos flash simplificado',
+                hints: [
+                    'En init: almacena el saldo inicial del pool',
+                    'En flash_loan: verifica que el pool tenga suficiente, descuenta del pool, registra el préstamo',
+                    'En repay: verifica que exista el préstamo, devuelve fondos más comisión al pool, limpia el préstamo',
+                ],
+            },
+            fr: {
+                title: 'Pool de Prêts Flash',
+                story: `# ⚡ Le Coffre de l'Éclair
+
+Dans la couche la plus profonde de la Citadelle repose le **Coffre de l'Éclair**, où le capital se déplace à la vitesse de la lumière.
+
+*"Les prêts flash sont l'épreuve ultime de la conception de contrats,"* dit l'Archonte de l'Éclair. *"Emprunte, utilise et rembourse en une seule transaction."*
+
+## Ta Mission
+
+Construis un pool de prêts flash simplifié :
+- \`init\` — définit le solde du pool
+- \`flash_loan\` — emprunte au pool (doit être remboursé au sein de l'appel)
+- \`get_pool_balance\` — renvoie le solde actuel du pool
+- \`repay\` — rembourse le montant emprunté plus de petits frais
+
+## Ce Que Tu Apprendras
+
+- La mécanique des prêts flash (simplifiée pour la validation)
+- La gestion du solde du pool
+- Le suivi du cycle de vie du prêt
+- Les motifs de frais au remboursement
+
+## Concepts Clés
+
+\`\`\`rust
+// Track active loan
+let loan: i128 = env.storage().instance()
+    .get(&(borrower.clone(), LOAN_AMOUNT))
+    .unwrap_or(0);
+
+// Repay with fee
+let fee = amount / 100; // 1% fee
+env.storage().instance().set(&POOL, &(pool_bal + amount + fee));
+\`\`\``,
+                learningGoal: 'Construis un contrat de pool de prêts flash simplifié',
+                hints: [
+                    'Dans init : stocke le solde initial du pool',
+                    'Dans flash_loan : vérifie que le pool en a assez, déduis du pool, enregistre le prêt',
+                    'Dans repay : vérifie que le prêt existe, rends les fonds plus les frais au pool, nettoie le prêt',
+                ],
+            },
+            ja: {
+                title: '閃光の融資',
+                story: `# ⚡ 稲妻の金庫
+
+シタデルの最下層には**稲妻の金庫**があります。ここで資本は光の速度で動きます。
+
+*"フラッシュローンはコントラクト設計の最終試験だ,"* 稲妻の統治者が言います。*"借りて、使い、一つのトランザクション内に返すのだ。"*
+
+## あなたの使命
+
+簡略化されたフラッシュローンプールを構築してください:
+- \`init\` — プール残高を設定
+- \`flash_loan\` — プールから借りる（呼び出し内に返す必要あり）
+- \`get_pool_balance\` — 現在のプール残高を返す
+- \`repay\` — 借りた金額と小額の手数料を返す
+
+## これから学ぶこと
+
+- フラッシュローン機構（簡略版）
+- プール残高管理
+- ローンライフサイクル追跡
+- 返済時の手数料パターン
+
+## 重要なコンセプト
+
+\`\`\`rust
+// アクティブなローンを追跡
+let loan: i128 = env.storage().instance()
+    .get(&(borrower.clone(), LOAN_AMOUNT))
+    .unwrap_or(0);
+
+// 手数料を払い戻す
+let fee = amount / 100; // 1%手数料
+env.storage().instance().set(&POOL, &(pool_bal + amount + fee));
+\`\`\``,
+                learningGoal: '簡略化されたフラッシュローンプールコントラクトを構築する',
+                hints: [
+                    'initで: 初期プール残高を保存',
+                    'flash_loanで: プールが十分あることを確認、プールから差引、ローンを記録',
+                    'repayで: ローンが存在することを確認、手数料付き資金をプールに返す、ローンをクリア',
+                ],
+            },
+        },
+        template: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, i128, Symbol};
+
+const POOL: Symbol = symbol_short!("POOL");
+const LOAN_AMOUNT: Symbol = symbol_short!("LOAN");
+const FEE_DIVISOR: i128 = 100;
+
+#[contract]
+pub struct FlashLoanContract;
+
+#[contractimpl]
+impl FlashLoanContract {
+    // TODO: Create 'init' function
+    // Parameters: env: Env, initial_balance: i128
+    // Should: store the initial pool balance
+
+    // TODO: Create 'flash_loan' function
+    // Parameters: env: Env, borrower: Address, amount: i128
+    // Should: check pool has enough balance, deduct from pool,
+    //         record loan amount for borrower
+
+    // TODO: Create 'repay' function
+    // Parameters: env: Env, borrower: Address, amount: i128
+    // Should: check loan exists, calculate fee, add to pool, clear loan record
+
+    // TODO: Create 'get_pool_balance' function
+    // Parameters: env: Env
+    // Returns: i128
+    // Should: return current pool balance
+}`,
+        solution: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, i128, Symbol};
+
+const POOL: Symbol = symbol_short!("POOL");
+const LOAN_AMOUNT: Symbol = symbol_short!("LOAN");
+const FEE_DIVISOR: i128 = 100;
+
+#[contract]
+pub struct FlashLoanContract;
+
+#[contractimpl]
+impl FlashLoanContract {
+    pub fn init(env: Env, initial_balance: i128) {
+        env.storage().instance().set(&POOL, &initial_balance);
+    }
+
+    pub fn flash_loan(env: Env, borrower: Address, amount: i128) {
+        let pool_bal: i128 = env.storage().instance().get(&POOL).unwrap_or(0);
+        if pool_bal < amount { panic!("Insufficient pool balance"); }
+        env.storage().instance().set(&POOL, &(pool_bal - amount));
+        env.storage().instance().set(&(borrower, LOAN_AMOUNT), &amount);
+    }
+
+    pub fn repay(env: Env, borrower: Address, amount: i128) {
+        let loan: i128 = env.storage().instance().get(&(borrower.clone(), LOAN_AMOUNT)).unwrap_or(0);
+        if loan == 0 { panic!("No active loan"); }
+        let fee = amount / FEE_DIVISOR;
+        let pool_bal: i128 = env.storage().instance().get(&POOL).unwrap_or(0);
+        env.storage().instance().set(&POOL, &(pool_bal + amount + fee));
+        env.storage().instance().remove(&(borrower, LOAN_AMOUNT));
+    }
+
+    pub fn get_pool_balance(env: Env) -> i128 {
+        env.storage().instance().get(&POOL).unwrap_or(0)
+    }
+}`,
+        checks: [
+            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
+            { type: 'has_function', name: 'init', params: ['env', 'initial_balance'], message: "Missing 'init' function" },
+            { type: 'has_function', name: 'flash_loan', params: ['env', 'borrower', 'amount'], message: "Missing 'flash_loan' function" },
+            { type: 'has_function', name: 'repay', params: ['env', 'borrower', 'amount'], message: "Missing 'repay' function" },
+            { type: 'has_function', name: 'get_pool_balance', params: ['env'], message: "Missing 'get_pool_balance' function" },
+            { type: 'returns_type', function: 'get_pool_balance', returnType: 'i128', message: "'get_pool_balance' should return i128" },
+            { type: 'contains_pattern', pattern: 'panic!', message: 'Must use panic for error conditions', description: 'panic for errors' },
+            { type: 'storage_operation', operation: 'set', message: 'Must use storage set' },
+            { type: 'storage_operation', operation: 'get', message: 'Must use storage get' },
+        ],
+        conceptsIntroduced: ['flash loan', 'pool management', 'fee mechanism', 'loan lifecycle'],
+    },
+
+    {
+        id: 'permissions-rbac',
+        chapter: 6,
+        order: 15,
+        difficulty: 'advanced',
+        xpReward: 450,
+        i18n: {
+            en: {
+                title: 'Permissions RBAC',
+                story: `# 🛡️ The Role Hall
+
+Beyond the Lightning Vault rises the **Role Hall**, where access is governed by structured permissions.
+
+*"Not all who wander are meant to access all doors,"* declares the Role Master. *"Build a system where roles define what one can do."*
+
+## Your Mission
+
+Create a role-based access control contract:
+- \`grant_role\` — admin grants a role to a user
+- \`revoke_role\` — admin revokes a role from a user
+- \`has_role\` — checks if a user has a specific role
+- \`get_admin\` — returns the contract admin
+
+## What You'll Learn
+
+- Role-based access control (RBAC) patterns
+- Admin-only privileged functions
+- Compound keys for role membership
+- Flexible permission architecture
+
+## Key Concepts
+
+\`\`\`rust
+// Grant a role
+let role_key = (user.clone(), role.clone());
+env.storage().instance().set(&role_key, &true);
+
+// Check role membership
+env.storage().instance()
+    .get(&(user.clone(), role.clone()))
+    .unwrap_or(false)
+\`\`\``,
+                learningGoal: 'Implement a role-based access control contract',
+                hints: [
+                    'In init: store the admin address',
+                    'In grant_role: require auth from admin, store role membership for user',
+                    'In revoke_role: require auth from admin, remove the role membership',
+                    'In has_role: check if the role key exists and is true',
+                ],
+            },
+            es: {
+                title: 'RBAC de Permisos',
+                story: `# 🛡️ El Salón de los Roles
+
+Más allá de la Bóveda del Relámpago se alza el **Salón de los Roles**, donde el acceso se gobierna mediante permisos estructurados.
+
+*"No todos los que vagan están destinados a acceder a todas las puertas,"* declara el Maestro de Roles. *"Construye un sistema donde los roles definan lo que uno puede hacer."*
+
+## Tu Misión
+
+Crea un contrato de control de acceso basado en roles:
+- \`grant_role\` — el admin concede un rol a un usuario
+- \`revoke_role\` — el admin revoca un rol de un usuario
+- \`has_role\` — verifica si un usuario tiene un rol específico
+- \`get_admin\` — devuelve el admin del contrato
+
+## Lo Que Aprenderás
+
+- Patrones de control de acceso basado en roles (RBAC)
+- Funciones privilegiadas solo para admin
+- Claves compuestas para membresía de roles
+- Arquitectura de permisos flexible
+
+## Conceptos Clave
+
+\`\`\`rust
+// Conceder un rol
+let role_key = (user.clone(), role.clone());
+env.storage().instance().set(&role_key, &true);
+
+// Verificar membresía de rol
+env.storage().instance()
+    .get(&(user.clone(), role.clone()))
+    .unwrap_or(false)
+\`\`\``,
+                learningGoal: 'Implementa un contrato de control de acceso basado en roles',
+                hints: [
+                    'En init: almacena la dirección del admin',
+                    'En grant_role: require_auth del admin, almacena la membresía del rol para el usuario',
+                    'En revoke_role: require_auth del admin, elimina la membresía del rol',
+                    'En has_role: verifica si la clave del rol existe y es true',
+                ],
+            },
+            fr: {
+                title: 'RBAC des Permissions',
+                story: `# 🛡️ Le Hall des Rôles
+
+Au-delà du Coffre de l'Éclair s'élève le **Hall des Rôles**, où l'accès est régi par des permissions structurées.
+
+*"Tous ceux qui errent ne sont pas destinés à ouvrir toutes les portes,"* déclare le Maître des Rôles. *"Construis un système où les rôles définissent ce que l'on peut faire."*
+
+## Ta Mission
+
+Crée un contrat de contrôle d'accès basé sur les rôles :
+- \`grant_role\` — l'admin accorde un rôle à un utilisateur
+- \`revoke_role\` — l'admin révoque un rôle d'un utilisateur
+- \`has_role\` — vérifie si un utilisateur possède un rôle spécifique
+- \`get_admin\` — renvoie l'admin du contrat
+
+## Ce Que Tu Apprendras
+
+- Les motifs de contrôle d'accès basé sur les rôles (RBAC)
+- Les fonctions privilégiées réservées à l'admin
+- Les clés composées pour l'appartenance à un rôle
+- Une architecture de permissions flexible
+
+## Concepts Clés
+
+\`\`\`rust
+// Grant a role
+let role_key = (user.clone(), role.clone());
+env.storage().instance().set(&role_key, &true);
+
+// Check role membership
+env.storage().instance()
+    .get(&(user.clone(), role.clone()))
+    .unwrap_or(false)
+\`\`\``,
+                learningGoal: 'Implémente un contrat de contrôle d\'accès basé sur les rôles',
+                hints: [
+                    'Dans init : stocke l\'adresse de l\'admin',
+                    'Dans grant_role : require_auth de l\'admin, stocke l\'appartenance au rôle pour l\'utilisateur',
+                    'Dans revoke_role : require_auth de l\'admin, supprime l\'appartenance au rôle',
+                    'Dans has_role : vérifie si la clé du rôle existe et est true',
+                ],
+            },
+            ja: {
+                title: '許可と役割',
+                story: `# 🛡️ 役割の間
+
+稲妻の金庫を超えて**役割の間**が立ちはだかります。ここでアクセスは構造化された許可によって統治されます。
+
+*"さまよう者がすべてのドアへのアクセスを意図されていない,"* 役割の主人が宣言します。*"役割がしたり来ないことを定義するシステムを構築するのだ。"*
+
+## あなたの使命
+
+ロールベースアクセス制御コントラクトを作成してください:
+- \`grant_role\` — 管理者がユーザーにロールを付与
+- \`revoke_role\` — 管理者がユーザーからロールを取得
+- \`has_role\` — ユーザーが特定のロールを持っているかを確認
+- \`get_admin\` — コントラクトの管理者を返す
+
+## これから学ぶこと
+
+- ロールベースアクセス制御（RBAC）パターン
+- 管理者のみの特権機能
+- ロールメンバーシップ用複合キー
+- 柔軟な許可アーキテクチャ
+
+## 重要なコンセプト
+
+\`\`\`rust
+// ロールを付与
+let role_key = (user.clone(), role.clone());
+env.storage().instance().set(&role_key, &true);
+
+// ロールメンバーシップを確認
+env.storage().instance()
+    .get(&(user.clone(), role.clone()))
+    .unwrap_or(false)
+\`\`\``,
+                learningGoal: 'ロールベースアクセス制御コントラクトを実装する',
+                hints: [
+                    'initで: 管理者アドレスを保存',
+                    'grant_roleで: 管理者からrequire_auth、ユーザーのロールメンバーシップを保存',
+                    'revoke_roleで: 管理者からrequire_auth、ロールメンバーシップを削除',
+                    'has_roleで: ロールキーが存在してtrueであることを確認',
+                ],
+            },
+        },
+        template: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
+
+const ADMIN: Symbol = symbol_short!("ADMIN");
+
+#[contract]
+pub struct RBACContract;
+
+#[contractimpl]
+impl RBACContract {
+    // TODO: Create 'init' function
+    // Parameters: env: Env, admin: Address
+    // Should: store the admin address
+
+    // TODO: Create 'grant_role' function
+    // Parameters: env: Env, user: Address, role: Symbol
+    // Should: require auth from admin, store role membership
+
+    // TODO: Create 'revoke_role' function
+    // Parameters: env: Env, user: Address, role: Symbol
+    // Should: require auth from admin, remove role membership
+
+    // TODO: Create 'has_role' function
+    // Parameters: env: Env, user: Address, role: Symbol
+    // Returns: bool
+    // Should: return true if user has the role
+}`,
+        solution: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
+
+const ADMIN: Symbol = symbol_short!("ADMIN");
+
+#[contract]
+pub struct RBACContract;
+
+#[contractimpl]
+impl RBACContract {
+    pub fn init(env: Env, admin: Address) {
+        env.storage().instance().set(&ADMIN, &admin);
+    }
+
+    pub fn grant_role(env: Env, user: Address, role: Symbol) {
+        let admin: Address = env.storage().instance().get(&ADMIN).unwrap();
+        admin.require_auth();
+        env.storage().instance().set(&(user, role), &true);
+    }
+
+    pub fn revoke_role(env: Env, user: Address, role: Symbol) {
+        let admin: Address = env.storage().instance().get(&ADMIN).unwrap();
+        admin.require_auth();
+        env.storage().instance().set(&(user, role), &false);
+    }
+
+    pub fn has_role(env: Env, user: Address, role: Symbol) -> bool {
+        env.storage().instance().get(&(user, role)).unwrap_or(false)
+    }
+}`,
+        checks: [
+            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
+            { type: 'has_function', name: 'init', params: ['env', 'admin'], message: "Missing 'init' function" },
+            { type: 'has_function', name: 'grant_role', params: ['env', 'user', 'role'], message: "Missing 'grant_role' function" },
+            { type: 'has_function', name: 'revoke_role', params: ['env', 'user', 'role'], message: "Missing 'revoke_role' function" },
+            { type: 'has_function', name: 'has_role', params: ['env', 'user', 'role'], message: "Missing 'has_role' function" },
+            { type: 'returns_type', function: 'has_role', returnType: 'bool', message: "'has_role' should return bool" },
+            { type: 'contains_pattern', pattern: 'require_auth()', message: 'Must use require_auth()', description: 'require_auth()' },
+            { type: 'storage_operation', operation: 'set', message: 'Must use storage set' },
+            { type: 'storage_operation', operation: 'get', message: 'Must use storage get' },
+        ],
+        conceptsIntroduced: ['RBAC', 'role membership', 'admin pattern', 'compound permission keys'],
+    },
+
+    {
+        id: 'oracle-feed',
+        chapter: 6,
+        order: 16,
+        difficulty: 'advanced',
+        xpReward: 450,
+        i18n: {
+            en: {
+                title: 'Oracle Feed',
+                story: `# 📊 The Oracle Spire
+
+At the pinnacle of the Production Systems district stands the **Oracle Spire**, where off-chain data enters the blockchain.
+
+*"Smart contracts are blind without data,"* says the Oracle Sage. *"Build a bridge between the on-chain and off-chain worlds."*
+
+## Your Mission
+
+Create a price oracle contract:
+- \`update_price\` — admin updates the price for an asset pair
+- \`get_price\` — returns the current price for an asset pair
+- \`get_last_updated\` — returns when the price was last updated
+- \`get_all_assets\` — returns all tracked asset pairs
+
+## What You'll Learn
+
+- Oracle data feed patterns
+- Admin-only update functions
+- Timestamp/sequence tracking
+- Asset pair management with Vec<Symbol>
+
+## Key Concepts
+
+\`\`\`rust
+// Store price with metadata
+pub fn update_price(env: Env, asset: Symbol, price: i128) {
+    admin.require_auth();
+    env.storage().instance().set(&asset, &price);
+    env.storage().instance()
+        .set(&(asset.clone(), TIMESTAMP), &env.ledger().sequence());
+}
+\`\`\``,
+                learningGoal: 'Build an on-chain price oracle with admin updates',
+                hints: [
+                    'In update_price: require auth from admin, store price and sequence',
+                    'In get_price: look up and return the price for the asset',
+                    'In get_last_updated: return the stored sequence for the asset',
+                    'In get_all_assets: use a Vec<Symbol> tracker similar to event-emitter',
+                ],
+            },
+            es: {
+                title: 'Feed de Oráculo',
+                story: `# 📊 La Aguja del Oráculo
+
+En la cúspide del distrito de Sistemas de Producción se alza la **Aguja del Oráculo**, donde los datos fuera de la cadena entran en la blockchain.
+
+*"Los contratos inteligentes son ciegos sin datos,"* dice el Sabio del Oráculo. *"Construye un puente entre los mundos on-chain y off-chain."*
+
+## Tu Misión
+
+Crea un contrato de oráculo de precios:
+- \`update_price\` — el admin actualiza el precio de un par de activos
+- \`get_price\` — devuelve el precio actual de un par de activos
+- \`get_last_updated\` — devuelve cuándo se actualizó el precio por última vez
+- \`get_all_assets\` — devuelve todos los pares de activos rastreados
+
+## Lo Que Aprenderás
+
+- Patrones de alimentación de datos de oráculo
+- Funciones de actualización solo para admin
+- Seguimiento de marcas de tiempo/secuencia
+- Gestión de pares de activos con Vec<Symbol>
+
+## Conceptos Clave
+
+\`\`\`rust
+// Almacenar precio con metadatos
+pub fn update_price(env: Env, asset: Symbol, price: i128) {
+    admin.require_auth();
+    env.storage().instance().set(&asset, &price);
+    env.storage().instance()
+        .set(&(asset.clone(), TIMESTAMP), &env.ledger().sequence());
+}
+\`\`\``,
+                learningGoal: 'Construye un oráculo de precios on-chain con actualizaciones del admin',
+                hints: [
+                    'En update_price: require_auth del admin, almacena el precio y la secuencia',
+                    'En get_price: busca y devuelve el precio del activo',
+                    'En get_last_updated: devuelve la secuencia almacenada para el activo',
+                    'En get_all_assets: usa un rastreador Vec<Symbol> similar al event-emitter',
+                ],
+            },
+            fr: {
+                title: 'Flux d\'Oracle',
+                story: `# 📊 La Flèche de l'Oracle
+
+Au sommet du district des Systèmes de Production se dresse la **Flèche de l'Oracle**, où les données hors chaîne entrent dans la blockchain.
+
+*"Les contrats intelligents sont aveugles sans données,"* dit le Sage de l'Oracle. *"Construis un pont entre les mondes on-chain et off-chain."*
+
+## Ta Mission
+
+Crée un contrat d'oracle de prix :
+- \`update_price\` — l'admin met à jour le prix d'une paire d'actifs
+- \`get_price\` — renvoie le prix actuel d'une paire d'actifs
+- \`get_last_updated\` — renvoie la dernière mise à jour du prix
+- \`get_all_assets\` — renvoie toutes les paires d'actifs suivies
+
+## Ce Que Tu Apprendras
+
+- Les motifs de flux de données d'oracle
+- Les fonctions de mise à jour réservées à l'admin
+- Le suivi d'horodatage/séquence
+- La gestion des paires d'actifs avec Vec<Symbol>
+
+## Concepts Clés
+
+\`\`\`rust
+// Store price with metadata
+pub fn update_price(env: Env, asset: Symbol, price: i128) {
+    admin.require_auth();
+    env.storage().instance().set(&asset, &price);
+    env.storage().instance()
+        .set(&(asset.clone(), TIMESTAMP), &env.ledger().sequence());
+}
+\`\`\``,
+                learningGoal: 'Construis un oracle de prix on-chain avec des mises à jour de l\'admin',
+                hints: [
+                    'Dans update_price : require_auth de l\'admin, stocke le prix et la séquence',
+                    'Dans get_price : recherche et renvoie le prix de l\'actif',
+                    'Dans get_last_updated : renvoie la séquence stockée pour l\'actif',
+                    'Dans get_all_assets : utilise un traqueur Vec<Symbol> similaire à event-emitter',
+                ],
+            },
+            ja: {
+                title: 'オラクルフィード',
+                story: `# 📊 オラクルの塔
+
+本番システムの集落の頂上に立つ**オラクルの塔**は、オフチェーンデータがブロックチェーンに入る場所です。
+
+*「スマートコントラクトはデータなしでは盲目です」* と、オラクルの賢者は言います。*「オンチェーンとオフチェーンの世界の間に橋を架けてください。」*
+
+## あなたのミッション
+
+価格オラクルコントラクトを作成してください：
+- \`update_price\` — 管理者がアセットペアの価格を更新します
+- \`get_price\` — アセットペアの現在の価格を返します
+- \`get_last_updated\` — 価格が最後に更新された時刻を返します
+- \`get_all_assets\` — 追跡されているすべてのアセットペアを返します
+
+## 学ぶこと
+
+- オラクルデータフィードパターン
+- 管理者専用の更新関数
+- タイムスタンプ/シーケンス追跡
+- Vec<Symbol>を使用したアセットペア管理
+
+## 重要な概念
+
+\`\`\`rust
+// メタデータ付きの価格を保存
+pub fn update_price(env: Env, asset: Symbol, price: i128) {
+    admin.require_auth();
+    env.storage().instance().set(&asset, &price);
+    env.storage().instance()
+        .set(&(asset.clone(), TIMESTAMP), &env.ledger().sequence());
+}
+\`\`\``,
+                learningGoal: '管理者アップデートを使用したオンチェーン価格オラクルを構築してください',
+                hints: [
+                    'update_priceで：管理者からrequire_auth、価格とシーケンスを保存',
+                    'get_priceで：資産の価格をルックアップして返す',
+                    'get_last_updatedで：資産用に保存されたシーケンスを返す',
+                    'get_all_assetsで：event-emitterと同様のVec<Symbol>トラッカーを使用',
+                ],
+            },
+        },
+        template: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol, Vec};
+
+const ADMIN: Symbol = symbol_short!("ADMIN");
+const TS: Symbol = symbol_short!("TIMESTAMP");
+const ASSETS: Symbol = symbol_short!("ASSETS");
+
+#[contract]
+pub struct OracleContract;
+
+#[contractimpl]
+impl OracleContract {
+    // TODO: Create 'init' function
+    // Parameters: env: Env, admin: Address
+    // Should: store admin address
+
+    // TODO: Create 'update_price' function
+    // Parameters: env: Env, asset: Symbol, price: i128
+    // Should: require auth from admin, store price and sequence,
+    //         track asset key in Vec
+
+    // TODO: Create 'get_price' function
+    // Parameters: env: Env, asset: Symbol
+    // Returns: i128
+    // Should: return stored price (default 0)
+
+    // TODO: Create 'get_last_updated' function
+    // Parameters: env: Env, asset: Symbol
+    // Returns: u32
+    // Should: return stored sequence (default 0)
+
+    // TODO: Create 'get_all_assets' function
+    // Parameters: env: Env
+    // Returns: Vec<Symbol>
+    // Should: return all tracked asset symbols
+}`,
+        solution: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol, Vec};
+
+const ADMIN: Symbol = symbol_short!("ADMIN");
+const TS: Symbol = symbol_short!("TIMESTAMP");
+const ASSETS: Symbol = symbol_short!("ASSETS");
+
+#[contract]
+pub struct OracleContract;
+
+#[contractimpl]
+impl OracleContract {
+    pub fn init(env: Env, admin: Address) {
+        env.storage().instance().set(&ADMIN, &admin);
+    }
+
+    pub fn update_price(env: Env, asset: Symbol, price: i128) {
+        let admin: Address = env.storage().instance().get(&ADMIN).unwrap();
+        admin.require_auth();
+        env.storage().instance().set(&asset, &price);
+        env.storage().instance().set(&(asset.clone(), TS), &env.ledger().sequence());
+        let mut assets: Vec<Symbol> = env.storage().instance()
+            .get(&ASSETS)
+            .unwrap_or(Vec::new(&env));
+        if !assets.contains(&asset) {
+            assets.push_back(asset);
+            env.storage().instance().set(&ASSETS, &assets);
+        }
+    }
+
+    pub fn get_price(env: Env, asset: Symbol) -> i128 {
+        env.storage().instance().get(&asset).unwrap_or(0)
+    }
+
+    pub fn get_last_updated(env: Env, asset: Symbol) -> u32 {
+        env.storage().instance().get(&(asset, TS)).unwrap_or(0)
+    }
+
+    pub fn get_all_assets(env: Env) -> Vec<Symbol> {
+        env.storage().instance()
+            .get(&ASSETS)
+            .unwrap_or(Vec::new(&env))
+    }
+}`,
+        checks: [
+            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
+            { type: 'has_function', name: 'init', params: ['env', 'admin'], message: "Missing 'init' function" },
+            { type: 'has_function', name: 'update_price', params: ['env', 'asset', 'price'], message: "Missing 'update_price' function" },
+            { type: 'has_function', name: 'get_price', params: ['env', 'asset'], message: "Missing 'get_price' function" },
+            { type: 'has_function', name: 'get_last_updated', params: ['env', 'asset'], message: "Missing 'get_last_updated' function" },
+            { type: 'has_function', name: 'get_all_assets', params: ['env'], message: "Missing 'get_all_assets' function" },
+            { type: 'returns_type', function: 'get_price', returnType: 'i128', message: "'get_price' should return i128" },
+            { type: 'returns_type', function: 'get_all_assets', returnType: 'Vec<Symbol>', message: "'get_all_assets' should return Vec<Symbol>" },
+            { type: 'contains_pattern', pattern: 'require_auth()', message: 'Must use require_auth()', description: 'require_auth()' },
+            { type: 'storage_operation', operation: 'set', message: 'Must use storage set' },
+            { type: 'storage_operation', operation: 'get', message: 'Must use storage get' },
+        ],
+        conceptsIntroduced: ['oracle pattern', 'price feed', 'asset tracking', 'off-chain bridge'],
+    },
+
+    {
+        id: 'governor-simple',
+        chapter: 6,
+        order: 17,
+        difficulty: 'advanced',
+        xpReward: 500,
+        i18n: {
+            en: {
+                title: 'Simple Governor',
+                story: `# 🏛️ The Hall of Governance
+
+The final chamber awaits — the **Hall of Governance**, where the fate of the entire realm is decided by collective will.
+
+*"The greatest smart contracts empower communities to govern themselves,"* proclaims the Grand Elder. *"Build a system where proposals become law through voting."*
+
+## Your Mission
+
+Create a governance contract with proposals and voting:
+- \`create_proposal\` — creates a proposal with a description and voting period
+- \`vote\` — cast a vote (yes/no) on an active proposal
+- \`execute\` — executes a proposal if it passes
+- \`get_proposal\` — returns proposal details
+
+## What You'll Learn
+
+- On-chain governance mechanisms
+- Proposal lifecycle (create → vote → execute)
+- Vote tallying with Map<Address, bool>
+- Quorum and approval threshold logic
+
+## Key Concepts
+
+\`\`\`rust
+// Track votes per proposal
+let mut votes: Map<Address, bool> = env.storage().instance()
+    .get(&VOTES)
+    .unwrap_or(Map::new(&env));
+votes.set(&voter, &support);
+
+// Count approval
+let yes_votes: u32 = /* count votes where value is true */
+let no_votes: u32 = /* count votes where value is false */
+\`\`\``,
+                learningGoal: 'Build a complete on-chain governance system with proposals and voting',
+                hints: [
+                    'In create_proposal: store description, deadline, yes/no counts',
+                    'In vote: check proposal is active, record voter choice, update tallies',
+                    'In execute: check proposal passed (yes > no), mark as executed',
+                ],
+            },
+            es: {
+                title: 'Gobernador Simple',
+                story: `# 🏛️ El Salón de la Gobernanza
+
+La cámara final aguarda — el **Salón de la Gobernanza**, donde el destino de todo el reino se decide por la voluntad colectiva.
+
+*"Los mejores contratos inteligentes empoderan a las comunidades para gobernarse a sí mismas,"* proclama el Gran Anciano. *"Construye un sistema donde las propuestas se convierten en ley mediante la votación."*
+
+## Tu Misión
+
+Crea un contrato de gobernanza con propuestas y votación:
+- \`create_proposal\` — crea una propuesta con una descripción y un período de votación
+- \`vote\` — emite un voto (sí/no) sobre una propuesta activa
+- \`execute\` — ejecuta una propuesta si se aprueba
+- \`get_proposal\` — devuelve los detalles de la propuesta
+
+## Lo Que Aprenderás
+
+- Mecanismos de gobernanza on-chain
+- Ciclo de vida de propuestas (crear → votar → ejecutar)
+- Conteo de votos con Map<Address, bool>
+- Lógica de quórum y umbral de aprobación
+
+## Conceptos Clave
+
+\`\`\`rust
+// Rastrear votos por propuesta
+let mut votes: Map<Address, bool> = env.storage().instance()
+    .get(&VOTES)
+    .unwrap_or(Map::new(&env));
+votes.set(&voter, &support);
+
+// Contar aprobación
+let yes_votes: u32 = /* contar votos donde value es true */
+let no_votes: u32 = /* contar votos donde value es false */
+\`\`\``,
+                learningGoal: 'Construye un sistema de gobernanza on-chain completo con propuestas y votación',
+                hints: [
+                    'En create_proposal: almacena descripción, fecha límite, conteos de sí/no',
+                    'En vote: verifica que la propuesta esté activa, registra la elección del votante, actualiza los totales',
+                    'En execute: verifica que la propuesta se haya aprobado (sí > no), márcala como ejecutada',
+                ],
+            },
+            fr: {
+                title: 'Gouverneur Simple',
+                story: `# 🏛️ Le Hall de la Gouvernance
+
+La chambre finale attend — le **Hall de la Gouvernance**, où le destin de tout le royaume se décide par la volonté collective.
+
+*"Les meilleurs contrats intelligents habilitent les communautés à se gouverner elles-mêmes,"* proclame le Grand Ancien. *"Construis un système où les propositions deviennent loi par le vote."*
+
+## Ta Mission
+
+Crée un contrat de gouvernance avec propositions et vote :
+- \`create_proposal\` — crée une proposition avec une description et une période de vote
+- \`vote\` — émet un vote (oui/non) sur une proposition active
+- \`execute\` — exécute une proposition si elle est adoptée
+- \`get_proposal\` — renvoie les détails de la proposition
+
+## Ce Que Tu Apprendras
+
+- Les mécanismes de gouvernance on-chain
+- Le cycle de vie d'une proposition (créer → voter → exécuter)
+- Le comptage des votes avec Map<Address, bool>
+- La logique de quorum et de seuil d'approbation
+
+## Concepts Clés
+
+\`\`\`rust
+// Track votes per proposal
+let mut votes: Map<Address, bool> = env.storage().instance()
+    .get(&VOTES)
+    .unwrap_or(Map::new(&env));
+votes.set(&voter, &support);
+
+// Count approval
+let yes_votes: u32 = /* count votes where value is true */
+let no_votes: u32 = /* count votes where value is false */
+\`\`\``,
+                learningGoal: 'Construis un système de gouvernance on-chain complet avec propositions et vote',
+                hints: [
+                    'Dans create_proposal : stocke la description, la date limite, les décomptes oui/non',
+                    'Dans vote : vérifie que la proposition est active, enregistre le choix du votant, mets à jour les totaux',
+                    'Dans execute : vérifie que la proposition est adoptée (oui > non), marque-la comme exécutée',
+                ],
+            },
+            ja: {
+                title: 'シンプルガバナー',
+                story: `# 🏛️ 統治の殿堂
+
+最後の部屋が待っています — **統治の殿堂**は、全王国の運命が集団の意志によって決定される場所です。
+
+*「最高のスマートコントラクトはコミュニティに自分たちを統治する権限を与えます」* と、大長老は宣言します。*「提案が投票を通じて法律になるシステムを構築してください。」*
+
+## あなたのミッション
+
+提案と投票を備えたガバナンスコントラクトを作成してください：
+- \`create_proposal\` — 説明と投票期間を含む提案を作成します
+- \`vote\` — アクティブな提案に投票（はい/いいえ）を投じます
+- \`execute\` — 提案が可決された場合、その提案を実行します
+- \`get_proposal\` — 提案の詳細を返します
+
+## 学ぶこと
+
+- オンチェーン統治メカニズム
+- 提案ライフサイクル（作成→投票→実行）
+- Map<Address, bool>での投票集計
+- 定足数と承認閾値ロジック
+
+## 重要な概念
+
+\`\`\`rust
+// 提案ごとの投票を追跡
+let mut votes: Map<Address, bool> = env.storage().instance()
+    .get(&VOTES)
+    .unwrap_or(Map::new(&env));
+votes.set(&voter, &support);
+
+// 承認を数える
+let yes_votes: u32 = /* valueがtrueの投票を数える */
+let no_votes: u32 = /* valueがfalseの投票を数える */
+\`\`\``,
+                learningGoal: '提案と投票を備えた完全なオンチェーン統治システムを構築してください',
+                hints: [
+                    'create_proposalで：説明、期限、はい/いいえのカウントを保存',
+                    'voteで：提案がアクティブかどうかを確認し、投票者の選択を記録し、合計を更新',
+                    'executeで：提案が可決されたことを確認し（はい>いいえ）、実行済みとしてマーク',
+                ],
+            },
+        },
+        template: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol, Map};
+
+const DESCRIPTION: Symbol = symbol_short!("DESC");
+const DEADLINE: Symbol = symbol_short!("DEADLINE");
+const VOTES: Symbol = symbol_short!("VOTES");
+const EXECUTED: Symbol = symbol_short!("EXEC");
+const YES_COUNT: Symbol = symbol_short!("YES");
+const NO_COUNT: Symbol = symbol_short!("NO");
+
+#[contract]
+pub struct GovernorContract;
+
+#[contractimpl]
+impl GovernorContract {
+    // TODO: Create 'create_proposal' function
+    // Parameters: env: Env, creator: Address, description: Symbol, voting_period: u32
+    // Should: require auth from creator, store description, calculate and store deadline,
+    //         initialize vote counts to 0, create empty votes Map
+
+    // TODO: Create 'vote' function
+    // Parameters: env: Env, voter: Address, support: bool
+    // Should: check proposal active (deadline not passed), check not already voted,
+    //         record vote in Map, update yes/no counts
+
+    // TODO: Create 'execute' function
+    // Parameters: env: Env
+    // Should: check not already executed, check deadline passed,
+    //         check yes > no (majority), mark as executed
+
+    // TODO: Create 'get_proposal' function
+    // Parameters: env: Env
+    // Returns: Symbol
+    // Should: return the proposal description
+}`,
+        solution: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol, Map};
+
+const DESCRIPTION: Symbol = symbol_short!("DESC");
+const DEADLINE: Symbol = symbol_short!("DEADLINE");
+const VOTES: Symbol = symbol_short!("VOTES");
+const EXECUTED: Symbol = symbol_short!("EXEC");
+const YES_COUNT: Symbol = symbol_short!("YES");
+const NO_COUNT: Symbol = symbol_short!("NO");
+
+#[contract]
+pub struct GovernorContract;
+
+#[contractimpl]
+impl GovernorContract {
+    pub fn create_proposal(env: Env, creator: Address, description: Symbol, voting_period: u32) {
+        creator.require_auth();
+        let deadline = env.ledger().sequence() + voting_period;
+        env.storage().instance().set(&DESCRIPTION, &description);
+        env.storage().instance().set(&DEADLINE, &deadline);
+        env.storage().instance().set(&YES_COUNT, &0u32);
+        env.storage().instance().set(&NO_COUNT, &0u32);
+        let empty_votes: Map<Address, bool> = Map::new(&env);
+        env.storage().instance().set(&VOTES, &empty_votes);
+    }
+
+    pub fn vote(env: Env, voter: Address, support: bool) {
+        let deadline: u32 = env.storage().instance().get(&DEADLINE).unwrap_or(0);
+        if env.ledger().sequence() > deadline { panic!("Voting period ended"); }
+        let mut votes: Map<Address, bool> = env.storage().instance()
+            .get(&VOTES).unwrap_or(Map::new(&env));
+        if votes.contains(&voter) { panic!("Already voted"); }
+        votes.set(&voter, &support);
+        env.storage().instance().set(&VOTES, &votes);
+        if support {
+            let yes: u32 = env.storage().instance().get(&YES_COUNT).unwrap_or(0);
+            env.storage().instance().set(&YES_COUNT, &(yes + 1));
+        } else {
+            let no: u32 = env.storage().instance().get(&NO_COUNT).unwrap_or(0);
+            env.storage().instance().set(&NO_COUNT, &(no + 1));
+        }
+    }
+
+    pub fn execute(env: Env) -> bool {
+        let executed: bool = env.storage().instance().get(&EXECUTED).unwrap_or(false);
+        if executed { panic!("Already executed"); }
+        let deadline: u32 = env.storage().instance().get(&DEADLINE).unwrap_or(0);
+        if env.ledger().sequence() <= deadline { panic!("Voting period not ended"); }
+        let yes: u32 = env.storage().instance().get(&YES_COUNT).unwrap_or(0);
+        let no: u32 = env.storage().instance().get(&NO_COUNT).unwrap_or(0);
+        if yes <= no { panic!("Proposal did not pass"); }
+        env.storage().instance().set(&EXECUTED, &true);
+        true
+    }
+
+    pub fn get_proposal(env: Env) -> Symbol {
+        env.storage().instance().get(&DESCRIPTION).unwrap_or(symbol_short!("None"))
+    }
+}`,
+        checks: [
+            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
+            { type: 'has_function', name: 'create_proposal', params: ['env', 'creator', 'description', 'voting_period'], message: "Missing 'create_proposal' function" },
+            { type: 'has_function', name: 'vote', params: ['env', 'voter', 'support'], message: "Missing 'vote' function" },
+            { type: 'has_function', name: 'execute', params: ['env'], message: "Missing 'execute' function" },
+            { type: 'has_function', name: 'get_proposal', params: ['env'], message: "Missing 'get_proposal' function" },
+            { type: 'returns_type', function: 'execute', returnType: 'bool', message: "'execute' should return bool" },
+            { type: 'returns_type', function: 'get_proposal', returnType: 'Symbol', message: "'get_proposal' should return Symbol" },
+            { type: 'uses_type', typeName: 'Map', message: 'Must use Map type for votes' },
+            { type: 'contains_pattern', pattern: 'require_auth()', message: 'Must use require_auth()', description: 'require_auth()' },
+            { type: 'contains_pattern', pattern: 'panic!', message: 'Must use panic for error conditions', description: 'panic for errors' },
+            { type: 'storage_operation', operation: 'set', message: 'Must use storage set' },
+            { type: 'storage_operation', operation: 'get', message: 'Must use storage get' },
+        ],
+        conceptsIntroduced: ['governance', 'proposal lifecycle', 'vote tallying', 'quorum logic', 'execution'],
+    },
+
+/* ==========================================
+   Chapter 7: Security (CTF)
+   ========================================== */
+
+    {
+        id: 'reentrancy-guard',
+        chapter: 7,
+        order: 18,
+        difficulty: 'advanced',
+        xpReward: 500,
+        i18n: {
+            en: {
+                title: 'Reentrancy Guard',
+                story: `# 🛡️ The Vulnerability Forge
+
+Deep beneath the Citadel lies the **Vulnerability Forge**, where broken contracts are made whole.
+
+*"The most dangerous vulnerability in smart contracts,"* warns the Security Sage, *"is reentrancy. A contract that calls external code while holding state can be exploited."*
+
+## Your Mission
+
+The vault contract below is vulnerable to reentrancy — it updates its balance AFTER sending funds. Your job is to fix it using a **mutex guard** pattern: a boolean flag that prevents reentrancy.
+
+The vulnerable code has:
+- \`withdraw\` that sends funds BEFORE updating state (the bug)
+- No reentrancy protection
+
+Fix it by:
+1. Adding a \`MUTEX\` boolean storage key initialized to \`false\`
+2. At the start of \`withdraw\`, set it to \`true\`
+3. At the end of \`withdraw\`, set it back to \`false\`
+4. Check the mutex at entry and panic if already locked
+
+## What You'll Learn
+
+- Reentrancy vulnerability identification
+- Mutex/guard pattern for prevention
+- Check-effects-interaction pattern
+- Security-first development mindset
+
+## Key Concepts
+
+\`\`\`rust
+// Mutex guard pattern
+if env.storage().instance().get(&MUTEX).unwrap_or(false) {
+    panic!("Reentrancy detected");
+}
+env.storage().instance().set(&MUTEX, &true);
+// ... vulnerable operations ...
+env.storage().instance().set(&MUTEX, &false);
+\`\`\``,
+                learningGoal: 'Fix a reentrancy vulnerability using the mutex guard pattern',
+                hints: [
+                    'Add a MUTEX constant: `const MUTEX: Symbol = symbol_short!("MUTEX");`',
+                    'At the start of withdraw, check if mutex is true and panic if so',
+                    'Set mutex to true before the balance update, false after',
+                ],
+            },
+            es: {
+                title: 'Guardia de Reentrancia',
+                story: `# 🛡️ La Forja de Vulnerabilidades
+
+En las profundidades de la Ciudadela yace la **Forja de Vulnerabilidades**, donde los contratos rotos se restauran.
+
+*"La vulnerabilidad más peligrosa en los contratos inteligentes,"* advierte el Sabio de Seguridad, *"es la reentrancia. Un contrato que llama código externo mientras mantiene estado puede ser explotado."*
+
+## Tu Misión
+
+El contrato de bóveda que ves abajo es vulnerable a reentrancia — actualiza su saldo DESPUÉS de enviar fondos. Tu trabajo es arreglarlo usando un patrón de **guardia mutex**: una bandera booleana que previene la reentrancia.
+
+El código vulnerable tiene:
+- \`withdraw\` que envía fondos ANTES de actualizar el estado (el bug)
+- Sin protección de reentrancia
+
+Arrégialo:
+1. Añade una clave de almacenamiento \`MUTEX\` booleana inicializada a \`false\`
+2. Al inicio de \`withdraw\`, establécela a \`true\`
+3. Al final de \`withdraw\`, vuelve a \`false\`
+4. Verifica el mutex al entrar y haz panic si ya está bloqueado
+
+## Lo Que Aprenderás
+
+- Identificación de vulnerabilidad de reentrancia
+- Patrón de guardia mutex para prevención
+- Patrón check-effects-interaction
+- Mentalidad de desarrollo orientada a la seguridad
+
+## Conceptos Clave
+
+\`\`\`rust
+// Patrón de guardia mutex
+if env.storage().instance().get(&MUTEX).unwrap_or(false) {
+    panic!("Reentrancy detected");
+}
+env.storage().instance().set(&MUTEX, &true);
+// ... operaciones vulnerables ...
+env.storage().instance().set(&MUTEX, &false);
+\`\`\``,
+                learningGoal: 'Arregla una vulnerabilidad de reentrancia usando el patrón de guardia mutex',
+                hints: [
+                    'Añade una constante MUTEX: `const MUTEX: Symbol = symbol_short!("MUTEX");`',
+                    'Al inicio de withdraw, verifica si mutex es true y haz panic si es así',
+                    'Establece mutex a true antes de actualizar el saldo, false después',
+                ],
+            },
+            fr: {
+                title: 'Garde de Réentrance',
+                story: `# 🛡️ La Forge des Vulnérabilités
+
+Dans les profondeurs de la Citadelle repose la **Forge des Vulnérabilités**, où les contrats brisés sont restaurés.
+
+*"La vulnérabilité la plus dangereuse dans les contrats intelligents,"* avertit le Sage de la Sécurité, *"est la réentrance. Un contrat qui appelle du code externe tout en conservant un état peut être exploité."*
+
+## Ta Mission
+
+Le contrat de coffre ci-dessous est vulnérable à la réentrance — il met à jour son solde APRÈS avoir envoyé des fonds. Ta tâche est de le corriger en utilisant un motif de **garde mutex** : un drapeau booléen qui empêche la réentrance.
+
+Le code vulnérable comporte :
+- \`withdraw\` qui envoie des fonds AVANT de mettre à jour l'état (le bug)
+- Aucune protection contre la réentrance
+
+Corrige-le en :
+1. Ajoutant une clé de stockage booléenne \`MUTEX\` initialisée à \`false\`
+2. Au début de \`withdraw\`, en la mettant à \`true\`
+3. À la fin de \`withdraw\`, en la remettant à \`false\`
+4. Vérifiant le mutex à l'entrée et en faisant panic s'il est déjà verrouillé
+
+## Ce Que Tu Apprendras
+
+- L'identification de la vulnérabilité de réentrance
+- Le motif mutex/garde pour la prévention
+- Le motif check-effects-interaction
+- Un état d'esprit de développement axé sur la sécurité
+
+## Concepts Clés
+
+\`\`\`rust
+// Mutex guard pattern
+if env.storage().instance().get(&MUTEX).unwrap_or(false) {
+    panic!("Reentrancy detected");
+}
+env.storage().instance().set(&MUTEX, &true);
+// ... vulnerable operations ...
+env.storage().instance().set(&MUTEX, &false);
+\`\`\``,
+                learningGoal: 'Corrige une vulnérabilité de réentrance en utilisant le motif de garde mutex',
+                hints: [
+                    'Ajoute une constante MUTEX : `const MUTEX: Symbol = symbol_short!("MUTEX");`',
+                    'Au début de withdraw, vérifie si mutex est true et fais panic si c\'est le cas',
+                    'Mets mutex à true avant la mise à jour du solde, à false après',
+                ],
+            },
+            ja: {
+                title: 'リエントランシーガード',
+                story: `# 🛡️ 脆弱性の鍛冶場
+
+シタデルの奥深くに**脆弱性の鍛冶場**があります。ここは壊れたコントラクトが修復される場所です。
+
+*「スマートコントラクトで最も危険な脆弱性は」* と、セキュリティの賢者は警告します、*「リエントランシーです。状態を保持しながら外部コードを呼び出すコントラクトは悪用される可能性があります。」*
+
+## あなたのミッション
+
+以下のvaultコントラクトはリエントランシーに対して脆弱です — 資金を送信した後に残高を更新します。**ミューテックスガード**パターンを使用してそれを修正してください：リエントランシーを防止するブール値フラグです。
+
+脆弱なコードは以下のものです：
+- \`withdraw\`は状態を更新する前に資金を送信します（バグ）
+- リエントランシー保護がない
+
+以下のように修正してください：
+1. \`false\`に初期化されたミューテックスブール値ストレージキーを追加
+2. \`withdraw\`の開始時に\`true\`に設定
+3. \`withdraw\`の終了時に\`false\`に設定
+4. エントリでミューテックスをチェックし、ロック済みの場合はpanicをトリガー
+
+## 学ぶこと
+
+- リエントランシー脆弱性の特定
+- 予防のためのミューテックス/ガードパターン
+- チェック・エフェクト・インタラクションパターン
+- セキュリティファースト開発の考え方
+
+## 重要な概念
+
+\`\`\`rust
+// ミューテックスガードパターン
+if env.storage().instance().get(&MUTEX).unwrap_or(false) {
+    panic!("Reentrancy detected");
+}
+env.storage().instance().set(&MUTEX, &true);
+// ... 脆弱な操作 ...
+env.storage().instance().set(&MUTEX, &false);
+\`\`\``,
+                learningGoal: 'ミューテックスガードパターンを使用してリエントランシー脆弱性を修正',
+                hints: [
+                    'ミューテックス定数を追加：`const MUTEX: Symbol = symbol_short!("MUTEX");`',
+                    'withdrawの開始時、ミューテックスがtrueか確認し、その場合panicをトリガー',
+                    'ミューテックスを残高更新前にtrueに、その後falseに設定',
+                ],
+            },
+        },
+        template: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
+
+const BALANCE: Symbol = symbol_short!("BALANCE");
+
+// BUG: This contract is vulnerable to reentrancy!
+// The withdraw function sends funds before updating state.
+
+#[contract]
+pub struct VaultContract;
+
+#[contractimpl]
+impl VaultContract {
+    pub fn deposit(env: Env, user: Address, amount: i128) {
+        user.require_auth();
+        let bal: i128 = env.storage().instance().get(&(user.clone(), BALANCE)).unwrap_or(0);
+        env.storage().instance().set(&(user, BALANCE), &(bal + amount));
+    }
+
+    // TODO: Fix this function!
+    // Add a mutex guard to prevent reentrancy attacks.
+    // Current problem: state is updated after the simulated "send"
+    pub fn withdraw(env: Env, user: Address, amount: i128) -> i128 {
+        user.require_auth();
+        let bal: i128 = env.storage().instance().get(&(user.clone(), BALANCE)).unwrap_or(0);
+        // BUG: This should update state FIRST, or use a mutex
+        env.storage().instance().set(&(user.clone(), BALANCE), &(bal - amount));
+        amount
+    }
+
+    pub fn get_balance(env: Env, user: Address) -> i128 {
+        env.storage().instance().get(&(user, BALANCE)).unwrap_or(0)
+    }
+}`,
+        solution: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
+
+const BALANCE: Symbol = symbol_short!("BALANCE");
+const MUTEX: Symbol = symbol_short!("MUTEX");
+
+#[contract]
+pub struct VaultContract;
+
+#[contractimpl]
+impl VaultContract {
+    pub fn deposit(env: Env, user: Address, amount: i128) {
+        user.require_auth();
+        let bal: i128 = env.storage().instance().get(&(user.clone(), BALANCE)).unwrap_or(0);
+        env.storage().instance().set(&(user, BALANCE), &(bal + amount));
+    }
+
+    pub fn withdraw(env: Env, user: Address, amount: i128) -> i128 {
+        if env.storage().instance().get(&MUTEX).unwrap_or(false) {
+            panic!("Reentrancy detected");
+        }
+        env.storage().instance().set(&MUTEX, &true);
+        user.require_auth();
+        let bal: i128 = env.storage().instance().get(&(user.clone(), BALANCE)).unwrap_or(0);
+        env.storage().instance().set(&(user.clone(), BALANCE), &(bal - amount));
+        env.storage().instance().set(&MUTEX, &false);
+        amount
+    }
+
+    pub fn get_balance(env: Env, user: Address) -> i128 {
+        env.storage().instance().get(&(user, BALANCE)).unwrap_or(0)
+    }
+}`,
+        checks: [
+            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
+            { type: 'has_function', name: 'withdraw', params: ['env', 'user', 'amount'], message: "Missing 'withdraw' function" },
+            { type: 'has_function', name: 'deposit', params: ['env', 'user', 'amount'], message: "Missing 'deposit' function" },
+            { type: 'has_function', name: 'get_balance', params: ['env', 'user'], message: "Missing 'get_balance' function" },
+            { type: 'contains_pattern', pattern: 'MUTEX', message: 'Must define a MUTEX symbol for the reentrancy guard', description: 'MUTEX constant' },
+            { type: 'contains_pattern', pattern: 'panic!', message: 'Must panic when reentrancy is detected', description: 'panic on reentrancy' },
+            { type: 'storage_operation', operation: 'set', message: 'Must use storage set for state' },
+            { type: 'storage_operation', operation: 'get', message: 'Must use storage get for state' },
+        ],
+        conceptsIntroduced: ['reentrancy', 'mutex guard', 'security pattern', 'vulnerability fix'],
+    },
+
+    {
+        id: 'access-control-fix',
+        chapter: 7,
+        order: 19,
+        difficulty: 'advanced',
+        xpReward: 500,
+        i18n: {
+            en: {
+                title: 'Access Control Fix',
+                story: `# 🔓 The Permissions Breach
+
+The **Permissions Breach** is a training ground where broken authorization logic is repaired.
+
+*"The second most common vulnerability,"* explains the Security Sage, *"is missing access control. Functions that should be restricted to admins are callable by anyone."*
+
+## Your Mission
+
+The contract below has an \`admin\` address stored but NEVER uses \`require_auth()\` on privileged functions. Your job is to add proper access control.
+
+The vulnerable code has:
+- An \`ADMIN\` constant defined but never checked
+- \`set_fee\` and \`pause\` functions callable by anyone
+- No \`require_auth()\` calls anywhere
+
+Fix it by:
+1. Adding \`require_auth()\` checks on \`set_fee\` and \`pause\`
+2. Reading the admin address from storage before checking auth
+
+## What You'll Learn
+
+- Access control vulnerability identification
+- Proper \`require_auth()\` placement
+- Admin-only function patterns
+- Defense-in-depth principles
+
+## Key Concepts
+
+\`\`\`rust
+// Correct access control
+let admin: Address = env.storage().instance().get(&ADMIN).unwrap();
+admin.require_auth();
+
+// Now perform privileged operation
+env.storage().instance().set(&FEE, &new_fee);
+\`\`\``,
+                learningGoal: 'Fix missing access control by adding require_auth() checks',
+                hints: [
+                    'In set_fee: read ADMIN from storage, call admin.require_auth()',
+                    'In pause: read ADMIN from storage, call admin.require_auth()',
+                    'The init function is fine — it already stores the admin correctly',
+                ],
+            },
+            es: {
+                title: 'Corrección de Control de Acceso',
+                story: `# 🔓 La Brecha de Permisos
+
+La **Brecha de Permisos** es un campo de entrenamiento donde se repara la lógica de autorización rota.
+
+*"La segunda vulnerabilidad más común,"* explica el Sabio de Seguridad, *"es la falta de control de acceso. Funciones que deberían estar restringidas a administradores son invocables por cualquiera."*
+
+## Tu Misión
+
+El contrato de abajo tiene una dirección \`admin\` almacenada pero NUNCA usa \`require_auth()\` en funciones privilegiadas. Tu trabajo es añadir el control de acceso adecuado.
+
+El código vulnerable tiene:
+- Una constante \`ADMIN\` definida pero nunca verificada
+- \`set_fee\` y \`pause\` invocables por cualquiera
+- Sin llamadas a \`require_auth()\` en ninguna parte
+
+Arrégialo:
+1. Añade comprobaciones \`require_auth()\` en \`set_fee\` y \`pause\`
+2. Lee la dirección admin del almacenamiento antes de verificar la autenticación
+
+## Lo Que Aprenderás
+
+- Identificación de vulnerabilidad de control de acceso
+- Colocación correcta de \`require_auth()\`
+- Patrones de funciones solo para admin
+- Principios de defensa en profundidad
+
+## Conceptos Clave
+
+\`\`\`rust
+// Control de acceso correcto
+let admin: Address = env.storage().instance().get(&ADMIN).unwrap();
+admin.require_auth();
+
+// Ahora realiza la operación privilegiada
+env.storage().instance().set(&FEE, &new_fee);
+\`\`\``,
+                learningGoal: 'Arregla la falta de control de acceso añadiendo comprobaciones require_auth()',
+                hints: [
+                    'En set_fee: lee ADMIN del almacenamiento, llama a admin.require_auth()',
+                    'En pause: lee ADMIN del almacenamiento, llama a admin.require_auth()',
+                    'La función init está bien — ya almacena el admin correctamente',
+                ],
+            },
+            fr: {
+                title: 'Correction du Contrôle d\'Accès',
+                story: `# 🔓 La Brèche des Permissions
+
+La **Brèche des Permissions** est un terrain d'entraînement où l'on répare la logique d'autorisation défaillante.
+
+*"La deuxième vulnérabilité la plus courante,"* explique le Sage de la Sécurité, *"est l'absence de contrôle d'accès. Des fonctions qui devraient être réservées aux administrateurs sont appelables par n'importe qui."*
+
+## Ta Mission
+
+Le contrat ci-dessous stocke une adresse \`admin\` mais n'utilise JAMAIS \`require_auth()\` sur les fonctions privilégiées. Ta tâche est d'ajouter un contrôle d'accès approprié.
+
+Le code vulnérable comporte :
+- Une constante \`ADMIN\` définie mais jamais vérifiée
+- Les fonctions \`set_fee\` et \`pause\` appelables par n'importe qui
+- Aucun appel à \`require_auth()\` où que ce soit
+
+Corrige-le en :
+1. Ajoutant des vérifications \`require_auth()\` sur \`set_fee\` et \`pause\`
+2. Lisant l'adresse admin depuis le stockage avant de vérifier l'authentification
+
+## Ce Que Tu Apprendras
+
+- L'identification de la vulnérabilité de contrôle d'accès
+- Le placement correct de \`require_auth()\`
+- Les motifs de fonctions réservées à l'admin
+- Les principes de défense en profondeur
+
+## Concepts Clés
+
+\`\`\`rust
+// Correct access control
+let admin: Address = env.storage().instance().get(&ADMIN).unwrap();
+admin.require_auth();
+
+// Now perform privileged operation
+env.storage().instance().set(&FEE, &new_fee);
+\`\`\``,
+                learningGoal: 'Corrige l\'absence de contrôle d\'accès en ajoutant des vérifications require_auth()',
+                hints: [
+                    'Dans set_fee : lis ADMIN depuis le stockage, appelle admin.require_auth()',
+                    'Dans pause : lis ADMIN depuis le stockage, appelle admin.require_auth()',
+                    'La fonction init est correcte — elle stocke déjà l\'admin correctement',
+                ],
+            },
+            ja: {
+                title: 'アクセス制御の修正',
+                story: `# 🔓 パーミッション侵害
+
+**パーミッション侵害**は、故障した認可ロジックが修復される訓練場です。
+
+*「最も一般的な2番目の脆弱性は」* と、セキュリティの賢者は説明します、*「アクセス制御の欠落です。管理者に限定されるべき関数は誰でも呼び出すことができます。」*
+
+## あなたのミッション
+
+以下のコントラクトは\`admin\`アドレスを保存していますが、特権関数で\`require_auth()\`を使用することはありません。適切なアクセス制御を追加してください。
+
+脆弱なコードは以下のものです：
+- 定義されているが検証されない\`ADMIN\`定数
+- 誰でも呼び出せる\`set_fee\`および\`pause\`関数
+- どこにも\`require_auth()\`呼び出しがない
+
+以下のように修正してください：
+1. \`set_fee\`と\`pause\`に\`require_auth()\`チェックを追加
+2. 認証をチェックする前にストレージから管理者アドレスを読み込む
+
+## 学ぶこと
+
+- アクセス制御脆弱性の特定
+- 適切な\`require_auth()\`配置
+- 管理者専用関数パターン
+- 多層防御の原則
+
+## 重要な概念
+
+\`\`\`rust
+// 正しいアクセス制御
+let admin: Address = env.storage().instance().get(&ADMIN).unwrap();
+admin.require_auth();
+
+// 現在、特権操作を実行
+env.storage().instance().set(&FEE, &new_fee);
+\`\`\``,
+                learningGoal: 'require_auth()チェックを追加してアクセス制御の欠落を修正',
+                hints: [
+                    'set_feeで：ストレージからADMINを読み込み、admin.require_auth()を呼び出す',
+                    'pauseで：ストレージからADMINを読み込み、admin.require_auth()を呼び出す',
+                    'init関数は大丈夫です — 既に管理者を正しく保存しています',
+                ],
+            },
+        },
+        template: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
+
+const ADMIN: Symbol = symbol_short!("ADMIN");
+const FEE: Symbol = symbol_short!("FEE");
+const PAUSED: Symbol = symbol_short!("PAUSED");
+
+// BUG: This contract stores an admin but never checks authorization!
+// The set_fee and pause functions should be admin-only.
+
+#[contract]
+pub struct ConfigContract;
+
+#[contractimpl]
+impl ConfigContract {
+    pub fn init(env: Env, admin: Address) {
+        env.storage().instance().set(&ADMIN, &admin);
+        env.storage().instance().set(&FEE, &100i128);
+        env.storage().instance().set(&PAUSED, &false);
+    }
+
+    // TODO: Add access control! require_auth() from admin before changing fee
+    pub fn set_fee(env: Env, new_fee: i128) {
+        // Missing: admin.require_auth()
+        env.storage().instance().set(&FEE, &new_fee);
+    }
+
+    // TODO: Add access control! require_auth() from admin before pausing
+    pub fn pause(env: Env, paused: bool) {
+        // Missing: admin.require_auth()
+        env.storage().instance().set(&PAUSED, &paused);
+    }
+
+    pub fn get_fee(env: Env) -> i128 {
+        env.storage().instance().get(&FEE).unwrap_or(0)
+    }
+
+    pub fn is_paused(env: Env) -> bool {
+        env.storage().instance().get(&PAUSED).unwrap_or(false)
+    }
+}`,
+        solution: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
+
+const ADMIN: Symbol = symbol_short!("ADMIN");
+const FEE: Symbol = symbol_short!("FEE");
+const PAUSED: Symbol = symbol_short!("PAUSED");
+
+#[contract]
+pub struct ConfigContract;
+
+#[contractimpl]
+impl ConfigContract {
+    pub fn init(env: Env, admin: Address) {
+        env.storage().instance().set(&ADMIN, &admin);
+        env.storage().instance().set(&FEE, &100i128);
+        env.storage().instance().set(&PAUSED, &false);
+    }
+
+    pub fn set_fee(env: Env, new_fee: i128) {
+        let admin: Address = env.storage().instance().get(&ADMIN).unwrap();
+        admin.require_auth();
+        env.storage().instance().set(&FEE, &new_fee);
+    }
+
+    pub fn pause(env: Env, paused: bool) {
+        let admin: Address = env.storage().instance().get(&ADMIN).unwrap();
+        admin.require_auth();
+        env.storage().instance().set(&PAUSED, &paused);
+    }
+
+    pub fn get_fee(env: Env) -> i128 {
+        env.storage().instance().get(&FEE).unwrap_or(0)
+    }
+
+    pub fn is_paused(env: Env) -> bool {
+        env.storage().instance().get(&PAUSED).unwrap_or(false)
+    }
+}`,
+        checks: [
+            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
+            { type: 'has_function', name: 'set_fee', params: ['env', 'new_fee'], message: "Missing 'set_fee' function" },
+            { type: 'has_function', name: 'pause', params: ['env', 'paused'], message: "Missing 'pause' function" },
+            { type: 'has_function', name: 'get_fee', params: ['env'], message: "Missing 'get_fee' function" },
+            { type: 'has_function', name: 'is_paused', params: ['env'], message: "Missing 'is_paused' function" },
+            { type: 'contains_pattern', pattern: 'require_auth()', message: 'Must use require_auth() for access control', description: 'require_auth() call' },
+            { type: 'storage_operation', operation: 'set', message: 'Must use storage set' },
+            { type: 'storage_operation', operation: 'get', message: 'Must use storage get' },
+        ],
+        conceptsIntroduced: ['access control', 'authorization fix', 'admin guard', 'security audit'],
+    },
+
+    /* ==========================================
+       Standalone Missions — outside campaign structure
+       Self-contained drills, no level gating. Filtered out of
+       campaign progression but still count toward XP/gold.
+       ========================================== */
+
+    {
+        id: 'standalone-storage-dojo',
+        standalone: true,
+        order: 20,
+        difficulty: 'beginner',
+        xpReward: 120,
+        i18n: {
+            en: {
+                title: 'Storage Dojo',
+                story: `# 🥋 Storage Dojo
+
+Welcome to the **Storage Dojo** — a quiet training hall outside the campaign path.
+
+*"Before mastering complex protocols, drill the basics until they are reflex,"* says the Dojo Master.
+
+## Your Mission
+
+Build a minimal storage contract that can save and retrieve a single value:
+
+- \`set_value\` — stores a \`u32\` under a fixed key
+- \`get_value\` — retrieves the stored value (defaults to \`0\` if empty)
+
+## What You'll Learn
+
+- \`env.storage().instance().set(&key, &value)\` — write
+- \`env.storage().instance().get(&key).unwrap_or(0)\` — read with default
+- The \`symbol_short!\` macro for storage keys
+
+## Key Concepts
+
+\`\`\`rust
+const VALUE: Symbol = symbol_short!("VALUE");
+env.storage().instance().set(&VALUE, &value);
+env.storage().instance().get(&VALUE).unwrap_or(0)
+\`\`\``,
+                learningGoal: 'Practice basic instance storage: set and get a u32 value',
+                hints: [
+                    'Define `const VALUE: Symbol = symbol_short!("VALUE");` at the top',
+                    'In set_value: `env.storage().instance().set(&VALUE, &value)`',
+                    'In get_value: `env.storage().instance().get(&VALUE).unwrap_or(0)`',
+                ],
+            },
+            es: {
+                title: 'Dojo de Almacenamiento',
+                story: `# 🥋 Dojo de Almacenamiento
+
+Bienvenido al **Dojo de Almacenamiento** — una sala de entrenamiento tranquila fuera del camino de campaña.
+
+*"Antes de dominar protocolos complejos, practica lo básico hasta que sea un reflejo,"* dice el Maestro del Dojo.
+
+## Tu Misión
+
+Construye un contrato mínimo que pueda guardar y recuperar un solo valor:
+
+- \`set_value\` — almacena un \`u32\` bajo una clave fija
+- \`get_value\` — recupera el valor almacenado (por defecto \`0\` si está vacío)
+
+## Lo Que Aprenderás
+
+- \`env.storage().instance().set(&key, &value)\` — escribir
+- \`env.storage().instance().get(&key).unwrap_or(0)\` — leer con valor por defecto
+- La macro \`symbol_short!\` para claves de almacenamiento
+
+## Conceptos Clave
+
+\`\`\`rust
+const VALUE: Symbol = symbol_short!("VALUE");
+env.storage().instance().set(&VALUE, &value);
+env.storage().instance().get(&VALUE).unwrap_or(0)
+\`\`\``,
+                learningGoal: 'Practica el almacenamiento básico instance: guardar y obtener un valor u32',
+                hints: [
+                    'Define `const VALUE: Symbol = symbol_short!("VALUE");` al inicio',
+                    'En set_value: `env.storage().instance().set(&VALUE, &value)`',
+                    'En get_value: `env.storage().instance().get(&VALUE).unwrap_or(0)`',
+                ],
+            },
+            fr: {
+                title: 'Dojo de Stockage',
+                story: `# 🥋 Dojo de Stockage
+
+Bienvenue au **Dojo de Stockage** — une salle d'entraînement paisible en dehors du chemin de campagne.
+
+*"Avant de maîtriser les protocoles complexes, répète les bases jusqu'au réflexe,"* dit le Maître du Dojo.
+
+## Ta Mission
+
+Construis un contrat minimal capable de sauvegarder et récupérer une seule valeur :
+
+- \`set_value\` — stocke un \`u32\` sous une clé fixe
+- \`get_value\` — récupère la valeur stockée (par défaut \`0\` si vide)
+
+## Ce Que Tu Apprendras
+
+- \`env.storage().instance().set(&key, &value)\` — écrire
+- \`env.storage().instance().get(&key).unwrap_or(0)\` — lire avec défaut
+- La macro \`symbol_short!\` pour les clés de stockage
+
+## Concepts Clés
+
+\`\`\`rust
+const VALUE: Symbol = symbol_short!("VALUE");
+env.storage().instance().set(&VALUE, &value);
+env.storage().instance().get(&VALUE).unwrap_or(0)
+\`\`\``,
+                learningGoal: 'Pratique le stockage instance de base : enregistrer et récupérer une valeur u32',
+                hints: [
+                    'Définis `const VALUE: Symbol = symbol_short!("VALUE");` en haut',
+                    'Dans set_value : `env.storage().instance().set(&VALUE, &value)`',
+                    'Dans get_value : `env.storage().instance().get(&VALUE).unwrap_or(0)`',
+                ],
+            },
+        },
+        template: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol};
+
+const VALUE: Symbol = symbol_short!("VALUE");
+
+#[contract]
+pub struct StorageDojo;
+
+#[contractimpl]
+impl StorageDojo {
+    // TODO: Create 'set_value' function
+    // Parameters: env: Env, value: u32
+    // Should store the value under VALUE key
+
+    // TODO: Create 'get_value' function
+    // Parameters: env: Env
+    // Returns: u32
+    // Should return the stored value or 0 if not set
+    
+}`,
+        solution: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol};
+
+const VALUE: Symbol = symbol_short!("VALUE");
+
+#[contract]
+pub struct StorageDojo;
+
+#[contractimpl]
+impl StorageDojo {
+    pub fn set_value(env: Env, value: u32) {
+        env.storage().instance().set(&VALUE, &value);
+    }
+
+    pub fn get_value(env: Env) -> u32 {
+        env.storage().instance().get(&VALUE).unwrap_or(0)
+    }
+}`,
+        checks: [
+            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
+            { type: 'has_function', name: 'set_value', params: ['env', 'value'], message: "Missing 'set_value' function" },
+            { type: 'has_function', name: 'get_value', params: ['env'], message: "Missing 'get_value' function" },
+            { type: 'returns_type', function: 'get_value', returnType: 'u32', message: "'get_value' should return u32" },
+            { type: 'storage_operation', operation: 'set', message: 'Must use storage set to store the value' },
+            { type: 'storage_operation', operation: 'get', message: 'Must use storage get to read the value' },
+            { type: 'uses_type', typeName: 'Symbol', message: 'Must use Symbol for the storage key' },
+        ],
+        conceptsIntroduced: ['storage', 'instance', 'set', 'get', 'unwrap_or'],
+    },
+
+    {
+        id: 'standalone-auth-guard',
+        standalone: true,
+        order: 21,
+        difficulty: 'beginner',
+        xpReward: 150,
+        i18n: {
+            en: {
+                title: 'Auth Guard Drill',
+                story: `# 🛡️ Auth Guard Drill
+
+Step into the **Guard Post** — a standalone drill for authorization.
+
+*"Every state change must prove who asked for it,"* warns the Guard Captain.
+
+## Your Mission
+
+Build a contract that gates a privileged action behind \`require_auth\`:
+
+- \`init\` — stores an admin address
+- \`protected_action\` — requires auth from the caller, flips a \`DONE\` flag to \`true\`
+- \`is_done\` — returns whether the flag is set
+
+## What You'll Learn
+
+- \`Address\` type for identities
+- \`address.require_auth()\` guard
+- Storing and checking a boolean flag
+
+## Key Concepts
+
+\`\`\`rust
+let admin: Address = env.storage().instance().get(&ADMIN).unwrap();
+admin.require_auth();
+env.storage().instance().set(&DONE, &true);
+\`\`\``,
+                learningGoal: 'Practice require_auth gating for a protected state change',
+                hints: [
+                    'Store admin in init: `env.storage().instance().set(&ADMIN, &admin)`',
+                    'In protected_action: read caller auth with `user.require_auth()`',
+                    'Set flag: `env.storage().instance().set(&DONE, &true)`',
+                ],
+            },
+            es: {
+                title: 'Ejercicio de Guardia de Autorización',
+                story: `# 🛡️ Ejercicio de Guardia de Autorización
+
+Entra al **Puesto de Guardia** — un ejercicio aislado de autorización.
+
+*"Cada cambio de estado debe probar quién lo solicitó,"* advierte el Capitán de la Guardia.
+
+## Tu Misión
+
+Construye un contrato que proteja una acción privilegiada con \`require_auth\`:
+
+- \`init\` — guarda una dirección admin
+- \`protected_action\` — requiere auth del llamante, cambia la bandera \`DONE\` a \`true\`
+- \`is_done\` — devuelve si la bandera está activa
+
+## Lo Que Aprenderás
+
+- El tipo \`Address\` para identidades
+- Guardia \`address.require_auth()\`
+- Almacenar y verificar una bandera booleana
+
+## Conceptos Clave
+
+\`\`\`rust
+let admin: Address = env.storage().instance().get(&ADMIN).unwrap();
+admin.require_auth();
+env.storage().instance().set(&DONE, &true);
+\`\`\``,
+                learningGoal: 'Practica el control require_auth para un cambio de estado protegido',
+                hints: [
+                    'Guarda admin en init: `env.storage().instance().set(&ADMIN, &admin)`',
+                    'En protected_action: verifica con `user.require_auth()`',
+                    'Activa la bandera: `env.storage().instance().set(&DONE, &true)`',
+                ],
+            },
+            fr: {
+                title: "Exercice du Garde d'Autorisation",
+                story: `# 🛡️ Exercice du Garde d'Autorisation
+
+Entre dans le **Poste de Garde** — un exercice isolé pour l'autorisation.
+
+*"Chaque changement d'état doit prouver qui l'a demandé,"* avertit le Capitaine de la Garde.
+
+## Ta Mission
+
+Construis un contrat qui protège une action privilégiée avec \`require_auth\` :
+
+- \`init\` — enregistre une adresse admin
+- \`protected_action\` — exige l'auth de l'appelant, met le drapeau \`DONE\` à \`true\`
+- \`is_done\` — renvoie si le drapeau est activé
+
+## Ce Que Tu Apprendras
+
+- Le type \`Address\` pour les identités
+- Le garde \`address.require_auth()\`
+- Stocker et vérifier un drapeau booléen
+
+## Concepts Clés
+
+\`\`\`rust
+let admin: Address = env.storage().instance().get(&ADMIN).unwrap();
+admin.require_auth();
+env.storage().instance().set(&DONE, &true);
+\`\`\``,
+                learningGoal: "Pratique le contrôle require_auth pour un changement d'état protégé",
+                hints: [
+                    "Stocke admin dans init : `env.storage().instance().set(&ADMIN, &admin)`",
+                    "Dans protected_action : vérifie avec `user.require_auth()`",
+                    "Active le drapeau : `env.storage().instance().set(&DONE, &true)`",
+                ],
+            },
+        },
+        template: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
+
+const ADMIN: Symbol = symbol_short!("ADMIN");
+const DONE: Symbol = symbol_short!("DONE");
+
+#[contract]
+pub struct AuthGuard;
+
+#[contractimpl]
+impl AuthGuard {
+    // TODO: Create 'init' function
+    // Parameters: env: Env, admin: Address
+    // Should store admin
+
+    // TODO: Create 'protected_action' function
+    // Parameters: env: Env, user: Address
+    // Should call user.require_auth() and set DONE to true
+
+    // TODO: Create 'is_done' function
+    // Parameters: env: Env
+    // Returns: bool
+    // Should return the DONE flag or false
+    
+}`,
+        solution: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
+
+const ADMIN: Symbol = symbol_short!("ADMIN");
+const DONE: Symbol = symbol_short!("DONE");
+
+#[contract]
+pub struct AuthGuard;
+
+#[contractimpl]
+impl AuthGuard {
+    pub fn init(env: Env, admin: Address) {
+        env.storage().instance().set(&ADMIN, &admin);
+        env.storage().instance().set(&DONE, &false);
+    }
+
+    pub fn protected_action(env: Env, user: Address) {
+        user.require_auth();
+        env.storage().instance().set(&DONE, &true);
+    }
+
+    pub fn is_done(env: Env) -> bool {
+        env.storage().instance().get(&DONE).unwrap_or(false)
+    }
+}`,
+        checks: [
+            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
+            { type: 'has_function', name: 'init', params: ['env', 'admin'], message: "Missing 'init' function" },
+            { type: 'has_function', name: 'protected_action', params: ['env', 'user'], message: "Missing 'protected_action' function" },
+            { type: 'has_function', name: 'is_done', params: ['env'], message: "Missing 'is_done' function" },
+            { type: 'returns_type', function: 'is_done', returnType: 'bool', message: "'is_done' should return bool" },
+            { type: 'contains_pattern', pattern: 'require_auth()', message: 'Must use require_auth() for access control', description: 'require_auth()' },
+            { type: 'storage_operation', operation: 'set', message: 'Must use storage set' },
+            { type: 'storage_operation', operation: 'get', message: 'Must use storage get' },
+            { type: 'uses_type', typeName: 'Address', message: 'Must use Address type' },
+        ],
+        conceptsIntroduced: ['Address', 'require_auth', 'access control', 'bool storage'],
+    },
+
+    {
+        id: 'standalone-vector-lab',
+        standalone: true,
+        order: 22,
+        difficulty: 'beginner',
+        xpReward: 130,
+        i18n: {
+            en: {
+                title: 'Vector Lab',
+                story: `# 🧪 Vector Lab
+
+Enter the **Vector Lab** — a hands-on workshop for Soroban's most flexible collection.
+
+*"Vectors hold the many, order the many, return the many,"* says the Lab Technician.
+
+## Your Mission
+
+Create a contract that builds and inspects Vectors:
+
+- \`make_sequence\` — returns a \`Vec<u32>\` containing \`[1, 2, 3]\`
+- \`get_length\` — takes a \`Vec<u32>\` and returns its length as \`u32\`
+
+## What You'll Learn
+
+- \`Vec\` type and the \`vec![&env, ...]\` macro
+- \`Vec::len()\` for length
+- Passing Vectors between functions
+
+## Key Concepts
+
+\`\`\`rust
+use soroban_sdk::{vec, Vec};
+vec![&env, 1u32, 2u32, 3u32]
+vals.len()
+\`\`\``,
+                learningGoal: 'Practice creating and inspecting Vec<u32> collections',
+                hints: [
+                    'Use `vec![&env, 1u32, 2u32, 3u32]` to build the sequence',
+                    'Signature for get_length: `pub fn get_length(env: Env, vals: Vec<u32>) -> u32`',
+                    'Return length with `vals.len()`',
+                ],
+            },
+            es: {
+                title: 'Laboratorio de Vectores',
+                story: `# 🧪 Laboratorio de Vectores
+
+Entra al **Laboratorio de Vectores** — un taller práctico para la colección más flexible de Soroban.
+
+*"Los vectores contienen a los muchos, ordenan a los muchos, devuelven a los muchos,"* dice el Técnico de Laboratorio.
+
+## Tu Misión
+
+Crea un contrato que construya e inspeccione Vectores:
+
+- \`make_sequence\` — devuelve un \`Vec<u32>\` que contiene \`[1, 2, 3]\`
+- \`get_length\` — recibe un \`Vec<u32>\` y devuelve su longitud como \`u32\`
+
+## Lo Que Aprenderás
+
+- El tipo \`Vec\` y la macro \`vec![&env, ...]\`
+- \`Vec::len()\` para la longitud
+- Pasar Vectores entre funciones
+
+## Conceptos Clave
+
+\`\`\`rust
+use soroban_sdk::{vec, Vec};
+vec![&env, 1u32, 2u32, 3u32]
+vals.len()
+\`\`\``,
+                learningGoal: 'Practica crear e inspeccionar colecciones Vec<u32>',
+                hints: [
+                    'Usa `vec![&env, 1u32, 2u32, 3u32]` para construir la secuencia',
+                    'Firma para get_length: `pub fn get_length(env: Env, vals: Vec<u32>) -> u32`',
+                    'Devuelve la longitud con `vals.len()`',
+                ],
+            },
+            fr: {
+                title: 'Laboratoire de Vecteurs',
+                story: `# 🧪 Laboratoire de Vecteurs
+
+Entre dans le **Laboratoire de Vecteurs** — un atelier pratique pour la collection la plus flexible de Soroban.
+
+*"Les vecteurs contiennent le multiple, ordonnent le multiple, renvoient le multiple,"* dit le Technicien de Laboratoire.
+
+## Ta Mission
+
+Crée un contrat qui construit et inspecte des Vecteurs :
+
+- \`make_sequence\` — renvoie un \`Vec<u32>\` contenant \`[1, 2, 3]\`
+- \`get_length\` — reçoit un \`Vec<u32>\` et renvoie sa longueur en \`u32\`
+
+## Ce Que Tu Apprendras
+
+- Le type \`Vec\` et la macro \`vec![&env, ...]\`
+- \`Vec::len()\` pour la longueur
+- Passer des Vecteurs entre les fonctions
+
+## Concepts Clés
+
+\`\`\`rust
+use soroban_sdk::{vec, Vec};
+vec![&env, 1u32, 2u32, 3u32]
+vals.len()
+\`\`\``,
+                learningGoal: 'Pratique la création et l\'inspection de collections Vec<u32>',
+                hints: [
+                    'Utilise `vec![&env, 1u32, 2u32, 3u32]` pour construire la séquence',
+                    'Signature pour get_length : `pub fn get_length(env: Env, vals: Vec<u32>) -> u32`',
+                    'Renvoie la longueur avec `vals.len()`',
+                ],
+            },
+        },
+        template: `#![no_std]
+use soroban_sdk::{contract, contractimpl, vec, Env, Vec};
+
+#[contract]
+pub struct VectorLab;
+
+#[contractimpl]
+impl VectorLab {
+    // TODO: Create 'make_sequence' function
+    // Parameters: env: Env
+    // Returns: Vec<u32>
+    // Should return vec![&env, 1u32, 2u32, 3u32]
+
+    // TODO: Create 'get_length' function
+    // Parameters: env: Env, vals: Vec<u32>
+    // Returns: u32
+    // Should return vals.len()
+    
+}`,
+        solution: `#![no_std]
+use soroban_sdk::{contract, contractimpl, vec, Env, Vec};
+
+#[contract]
+pub struct VectorLab;
+
+#[contractimpl]
+impl VectorLab {
+    pub fn make_sequence(env: Env) -> Vec<u32> {
+        vec![&env, 1u32, 2u32, 3u32]
+    }
+
+    pub fn get_length(env: Env, vals: Vec<u32>) -> u32 {
+        vals.len()
+    }
+}`,
+        checks: [
+            { type: 'has_attribute', attribute: 'contractimpl', message: 'Missing #[contractimpl]', description: '#[contractimpl]' },
+            { type: 'has_function', name: 'make_sequence', params: ['env'], message: "Missing 'make_sequence' function" },
+            { type: 'returns_type', function: 'make_sequence', returnType: 'Vec<u32>', message: "'make_sequence' should return Vec<u32>" },
+            { type: 'has_function', name: 'get_length', params: ['env', 'vals'], message: "Missing 'get_length' function" },
+            { type: 'returns_type', function: 'get_length', returnType: 'u32', message: "'get_length' should return u32" },
+            { type: 'contains_pattern', pattern: 'vec![', message: 'Must use vec! macro', description: 'vec! macro' },
+            { type: 'uses_type', typeName: 'Vec', message: 'Must use Vec type' },
+        ],
+        conceptsIntroduced: ['Vec', 'vec! macro', 'len', 'collections'],
+    },
+    ...authoredMissions,
+];
 
 /**
  * Returns a flat, render-ready mission object for the given language.
@@ -1032,12 +5244,15 @@ export function localizeMission(mission, lang = DEFAULT_MISSION_LANG) {
         (i18n && (i18n[lang] || i18n[DEFAULT_MISSION_LANG])) || {};
     const fallback = (i18n && i18n[DEFAULT_MISSION_LANG]) || {};
 
-    const pick = (field) =>
-        locale[field] != null
-            ? locale[field]
-            : fallback[field] != null
-            ? fallback[field]
-            : neutral[field];
+    const resolve = (value, language) => {
+        if (typeof value !== 'string' || !value.startsWith('missions.')) return value;
+        return value.split('.').reduce((current, part) => current?.[part], missionLocales[language]);
+    };
+
+    const pick = (field) => {
+        const value = locale[field] != null ? locale[field] : fallback[field] != null ? fallback[field] : neutral[field];
+        return resolve(value, locale === i18n?.[lang] ? lang : DEFAULT_MISSION_LANG);
+    };
 
     return {
         ...neutral,

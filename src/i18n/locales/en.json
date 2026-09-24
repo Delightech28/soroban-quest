@@ -10,6 +10,7 @@
     "close": "Close",
     "save": "Save",
     "cancel": "Cancel",
+    "confirm": "Confirm",
     "loading": "Loading…",
     "all": "All",
     "level": "Level",
@@ -22,18 +23,74 @@
     "unlocked": "Unlocked",
     "skipToContent": "Skip to main content"
   },
+  "shortcuts": {
+    "title": "Keyboard Shortcuts",
+    "subtitle": "Master Soroban Quest with quick key combinations",
+    "sections": {
+      "navigation": "Navigation",
+      "editor": "Code Editor",
+      "general": "General"
+    },
+    "nav": {
+      "home": "Go to Home",
+      "campaigns": "Go to Campaigns",
+      "missions": "Go to Missions",
+      "profile": "Go to Profile",
+      "journal": "Go to Journal"
+    },
+    "editor": {
+      "runTests": "Run Code / Tests",
+      "resetTemplate": "Reset Template",
+      "showSolution": "Show Solution",
+      "toggleHints": "Toggle Hints",
+      "toggleTheme": "Toggle Editor Theme"
+    },
+    "general": {
+      "openModal": "Open Shortcuts Modal",
+      "closeModal": "Close Any Modal"
+    }
+  },
   "navbar": {
     "home": "Home",
+    "quests": "Quests",
     "campaigns": "Campaigns",
     "missions": "Missions",
     "profile": "Profile",
     "journal": "Journal",
+    "leaderboard": "Leaderboard",
+    "achievements": "Achievements",
+    "shop": "Shop",
     "ariaMain": "Main navigation",
     "ariaHome": "Go to home page",
     "ariaMobile": "Mobile navigation menu",
     "userProfile": "User profile:",
     "openMenu": "Open navigation menu",
-    "closeMenu": "Close navigation menu"
+    "closeMenu": "Close navigation menu",
+    "replayTutorial": "Replay Tutorial"
+  },
+  "quests": {
+    "title": "Quest Catalog",
+    "subtitle": "Browse, search, and filter all available missions.",
+    "searchPlaceholder": "Search missions...",
+    "allCampaigns": "All Campaigns",
+    "standalone": "Standalone",
+    "allDifficulties": "All Difficulties",
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "allStatus": "All Status",
+    "completed": "Completed",
+    "incomplete": "Incomplete",
+    "done": "Done",
+    "noResults": "No missions found matching your criteria."
+  },
+  "theoryQuest": {
+    "submit": "Submit answer",
+    "correct": "Correct!",
+    "incorrect": "Not quite.",
+    "correctToast": "Answer is correct!",
+    "incorrectToast": "Try again — review the explanation.",
+    "completed": "This theory quest has already been completed."
   },
   "home": {
     "badge": "✨ Zero setup • No wallet needed • Open source",
@@ -50,9 +107,17 @@
       "viewMissionMap": "🗺️ View Mission Map"
     },
     "stats": {
-      "missions": "Missions",
-      "totalXp": "Total XP",
-      "backendNeeded": "Backend Needed"
+      "missionsCompleted": "{{count}}/{{total}} Missions",
+      "xpEarned": "{{xp}} XP Earned",
+      "goldEarned": "{{gold}} Gold",
+      "badgesUnlocked": "{{count}} Badges",
+      "currentLevel": "Level {{level}} — {{rank}}",
+      "nextMission": "Next Mission",
+      "continueFrom": "Continue from {{title}}",
+      "recentActivity": "Recent Activity",
+      "viewAll": "View All",
+      "quickStats": "Quick Stats",
+      "streak": "Day Streak"
     },
     "howItWorks": {
       "title": "How It Works",
@@ -90,19 +155,22 @@
       "heading": "Platform",
       "home": "Home",
       "missions": "Missions",
-      "profile": "Profile",
-      "glossary": "Glossary"
+      "profile": "Profile"
     },
     "resources": {
       "heading": "Resources",
       "docs": "Soroban Docs",
       "sdk": "Stellar SDK",
-      "github": "GitHub"
+      "github": "GitHub",
+      "glossary": "Glossary",
+      "faq": "FAQ"
     },
     "community": {
       "heading": "Community",
       "discord": "Discord",
-      "telegram": "Telegram"
+      "telegram": "Telegram",
+      "forum": "Stellar Forum",
+      "blog": "Stellar Blog"
     },
     "credits": {
       "tagline": "Built for the Stellar ecosystem",
@@ -119,6 +187,7 @@
       "title": "Something went wrong",
       "body": "The quest encountered a runtime error. Check the console for details.",
       "reload": "Reload",
+      "goHome": "Go Home",
       "report": "Report Issue"
     },
     "editor": {
@@ -133,9 +202,24 @@
   "profile": {
     "edit": "✏️ Edit Profile",
     "viewJournal": "📖 View Journal",
+    "aria": {
+      "selectAvatar": "Select avatar {{avatar}}",
+      "completedListing": "Completed missions list",
+      "completedEntry": "{{title}}, earned {{xp}} XP"
+    },
     "editPanel": {
       "title": "Edit Profile",
+      "nameLabel": "Adventurer name",
+      "avatarLegend": "Choose an avatar",
       "namePlaceholder": "Enter name"
+    },
+    "selector": {
+      "title": "Active Profile",
+      "help": "{{count}} of {{max}} local profiles in use.",
+      "meta": "Level {{level}} • {{xp}} XP",
+      "create": "Create profile",
+      "emptySlot": "Empty slot",
+      "defaultName": "Player {{number}}"
     },
     "stats": {
       "missions": "Missions",
@@ -162,6 +246,12 @@
         "importFailed": "❌ Invalid file — could not import.",
         "resetDone": "🗑️ Progress reset."
       },
+      "toast": {
+        "exported": "Progress exported successfully!",
+        "imported": "Progress imported successfully!",
+        "importFailed": "Could not import file. Check the format.",
+        "resetDone": "🗑️ Progress reset."
+      },
       "log": {
         "exported": "Exported adventure progress",
         "imported": "Imported adventure progress from file"
@@ -174,11 +264,48 @@
       }
     }
   },
+  "leaderboard": {
+    "kicker": "Local multiplayer",
+    "title": "Leaderboard",
+    "subtitle": "Compare XP, level, missions, and badges across your local profiles.",
+    "manageProfiles": "Manage Profiles",
+    "championAria": "Current local champion",
+    "championSummary": "Level {{level}} • {{xp}} XP • {{missions}} missions completed",
+    "tableTitle": "Local Rankings",
+    "profileCount": "{{count}} profiles",
+    "active": "Active",
+    "switch": "Switch",
+    "columns": {
+      "rank": "Rank",
+      "player": "Player",
+      "xp": "XP",
+      "level": "Level",
+      "missions": "Missions",
+      "badges": "Badges",
+      "status": "Status"
+    }
+  },
+  "achievements": {
+    "kicker": "Badge vault",
+    "title": "Achievements",
+    "subtitle": "{{name}}'s unlocked and locked achievements.",
+    "summaryAria": "Achievement completion summary",
+    "unlocked": "Unlocked",
+    "progressAria": "Achievement completion progress",
+    "progress": "Completion",
+    "gridAria": "Achievement badge collection",
+    "empty": "Complete missions to earn achievements and badges!"
+  },
   "journal": {
     "title": "Adventure Journal",
     "subtitle": "Your journey through the Soroban realm, recorded for eternity.",
     "clearLog": "🗑️ Clear Log",
     "confirmClear": "Clear all activity history?",
+    "controlsLabel": "Journal search and filters",
+    "searchLabel": "Search journal entries",
+    "searchPlaceholder": "Search journal entries...",
+    "typeFilterLabel": "Filter by activity type",
+    "dateFilterLabel": "Filter by date",
     "summary": {
       "missions": "Missions",
       "badges": "Badges",
@@ -193,6 +320,12 @@
       "levelUp": "Level Up",
       "hint": "Hint",
       "system": "System"
+    },
+    "dateFilters": {
+      "all": "Any time",
+      "today": "Today",
+      "week": "Last 7 days",
+      "month": "This month"
     },
     "empty": "No activities recorded yet. Start your first mission!",
     "dates": {
@@ -261,13 +394,21 @@
     },
     "chapters": {
       "all": "All Chapters",
-      "n": "Chapter {{number}}"
+      "n": "Chapter {{number}}",
+      "standalone": "Standalone"
     },
     "card": {
       "chapterMission": "Chapter {{chapter}} • Mission {{mission}}",
+      "standaloneMission": "Standalone • Mission {{mission}}",
       "xp": "⚡ {{xp}} XP",
       "completed": "✓ Completed",
-      "locked": "🔒 Locked"
+      "locked": "🔒 Locked",
+      "difficultyLabel": "Difficulty:",
+      "stateLabel": "State:"
+    },
+    "allCompleted": {
+      "title": "All Missions Complete!",
+      "body": "Congratulations, {{rank}}! You mastered all {{xp}} XP worth of Soroban challenges."
     },
     "noResults": "No missions found matching your filters.",
     "aria": {
@@ -284,8 +425,10 @@
       "story": "Story",
       "editor": "Editor",
       "tests": "Tests",
-      "replay": "📹 Replay"
+      "replay": "📹 Replay",
+      "ariaLabel": "Mission section tabs"
     },
+    "difficultyLabel": "Difficulty:",
     "notFound": {
       "title": "Mission Not Found",
       "body": "The mission \"{{id}}\" doesn't exist.",
@@ -294,15 +437,28 @@
     "editor": {
       "reset": "↺ Reset",
       "hint": "💡 Hint",
+      "goldHint": "🪙 Hint ({{cost}} gold)",
+      "goldHintTitle": "Spend {{cost}} gold to instantly reveal the next hint",
+      "goldHintInsufficient": "Not enough gold — need {{cost}} to unlock this hint",
+      "goldHintUnlocked": "🪙 Hint (unlocked)",
       "solution": "👁️ Solution",
       "run": "▶ Run Tests",
-      "running": "Running…"
+      "running": "Running…",
+      "compile": "⚙️ Compile & Run",
+      "compiling": "Compiling…",
+      "themeLabel": "Editor theme"
     },
     "terminal": {
       "title": "Test Output",
       "placeholder": "Click \"Run Tests\" to validate your code…",
       "runningChecks": "🔍 Running validation checks…",
-      "alreadyCompleted": "🏅 Already completed — no additional XP awarded."
+      "alreadyCompleted": "🏅 Already completed — no additional XP awarded.",
+      "compiling": "⚙️ Compiling contract…",
+      "compileOk": "✅ Compilation succeeded in {{ms}}ms",
+      "compileFailed": "❌ Compilation failed ({{errors}} error(s))",
+      "compileFallback": "ℹ️ Using the in-browser analyzer (real WASM toolchain not loaded).",
+      "compileEngineWasm": "🦀 Compiled with the Soroban WASM toolchain.",
+      "compileError": "❌ Compiler error: {{message}}"
     },
     "status": {
       "checking": "Checking…",
@@ -310,10 +466,36 @@
       "allPassing": "{{passed}}/{{total}} checks passing ✓",
       "note": "live checks · full suite on Run Tests"
     },
+    "securityNotes": {
+      "title": "Security Notes",
+      "advisory": "Advisory only. These notes do not block mission completion.",
+      "count": "{{count}}",
+      "line": "Line {{line}}",
+      "rules": {
+        "missingAuth": {
+          "title": "Missing authorization before state change",
+          "body": "{{functionName}} writes storage without require_auth() first."
+        },
+        "uncheckedArithmetic": {
+          "title": "Unchecked arithmetic on token amounts",
+          "body": "{{functionName}} uses wrapping or multiplying arithmetic on token amounts without a checked call."
+        },
+        "reentrancy": {
+          "title": "External call before state write",
+          "body": "{{functionName}} makes an external call before writing storage. Update state first."
+        },
+        "storageUnwrap": {
+          "title": "Storage read uses unwrap",
+          "body": "{{functionName}} unwraps a storage get on a user-supplied key. Missing values will panic."
+        }
+      }
+    },
     "toasts": {
       "validated": "Mission Parameters Validated!",
       "validationFailed": "Validation failed. Check terminal.",
       "hintUnlocked": "Hint {{index}} unlocked",
+      "hintGoldUnlocked": "Hint {{index}} unlocked for {{cost}} gold",
+      "hintInsufficientGold": "Not enough gold — need {{cost}} to unlock this hint",
       "codeReset": "Code reset to template",
       "solutionLoaded": "Solution loaded into editor"
     },
@@ -328,7 +510,8 @@
       "badgeEarnedOne": "🏅 New badge earned!",
       "badgeEarnedMany": "🏅 New badges earned!",
       "next": "Next Mission →",
-      "map": "Mission Map"
+      "map": "Mission Map",
+      "iconLabel": "Trophy icon — mission complete"
     },
     "replay": {
       "header": "📹 Watch Your Solution",
@@ -362,9 +545,17 @@
         "title": "Authorization",
         "description": "Access control and security"
       },
-      "Advanced": {
-        "title": "Advanced Patterns",
-        "description": "Complex contract patterns"
+      "Events": {
+        "title": "Events",
+        "description": "Emitting and handling contract events"
+      },
+      "Protocols": {
+        "title": "Protocols",
+        "description": "Real-world DeFi protocol patterns"
+      },
+      "DeFi": {
+        "title": "DeFi",
+        "description": "Decentralized finance primitives"
       }
     },
     "tooltip": {
@@ -432,6 +623,93 @@
     "speed_demon": {
       "name": "Speed Demon",
       "description": "Complete a mission on first try"
+    },
+    "chapter_1": {
+      "name": "Awakening",
+      "description": "Complete all Chapter 1 missions"
+    },
+    "chapter_2": {
+      "name": "Memory Keeper",
+      "description": "Complete all Chapter 2 missions"
+    },
+    "chapter_3": {
+      "name": "Forgemaster",
+      "description": "Complete all Chapter 3 missions"
+    },
+    "chapter_4": {
+      "name": "Data Architect",
+      "description": "Complete all Chapter 4 missions"
+    },
+    "chapter_5": {
+      "name": "Protocol Pioneer",
+      "description": "Complete all Chapter 5 missions"
+    },
+    "chapter_6": {
+      "name": "Production Master",
+      "description": "Complete all Chapter 6 missions"
+    },
+    "chapter_7": {
+      "name": "Security Sentinel",
+      "description": "Complete all Chapter 7 missions"
     }
+  },
+  "shop": {
+    "title": "Shop",
+    "subtitle": "Spend your Gold on avatars, boosts, and badges",
+    "ariaCategories": "Shop category filters",
+    "categories": {
+      "all": "All",
+      "avatars": "Avatars",
+      "boosts": "Boosts",
+      "badges": "Badges"
+    },
+    "items": {
+      "avatarPack1": "Avatar Pack 1",
+      "avatarPack1Desc": "Unlock 5 new avatar options",
+      "avatarPack2": "Avatar Pack 2",
+      "avatarPack2Desc": "Unlock 5 exclusive avatar options",
+      "xpBoost": "XP Boost",
+      "xpBoostDesc": "Double XP for your next mission",
+      "streakFreeze": "Streak Freeze",
+      "streakFreezeDesc": "Protect your streak for one missed day",
+      "hintToken": "Hint Token",
+      "hintTokenDesc": "Reveal a hint without XP penalty",
+      "premiumBadge": "Premium Badge",
+      "premiumBadgeDesc": "Exclusive premium badge for your profile"
+    },
+    "buy": "Buy",
+    "purchased": "Purchased",
+    "alreadyPurchased": "You already own this item",
+    "insufficientFunds": "Not enough Gold to purchase this item",
+    "purchaseSuccess": "Successfully purchased {{item}}!",
+    "empty": "No items found in this category",
+    "ariaPurchase": "Purchase {{item}} for {{price}} Gold",
+    "ariaPurchased": "{{item}} - Already purchased"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Welcome to Soroban Quest!",
+      "body": "Embark on a gamified journey to master Soroban smart contract development. Complete missions, earn XP and Gold, and unlock achievements."
+    },
+    "step2": {
+      "title": "Your Progress Hub",
+      "body": "The navbar shows your level, XP, gold balance, and profile. Use it to navigate between Missions, Campaigns, Profile, Journal, and more."
+    },
+    "step3": {
+      "title": "Mission Map & Quests",
+      "body": "The Mission Map shows all quests organized by chapter. Each mission presents a Soroban coding challenge with a story, hints, and automated validation."
+    },
+    "step4": {
+      "title": "Code Editor & Validation",
+      "body": "Write Rust Soroban code in the embedded Monaco editor. Run tests to check your solution against validation patterns. No compilation server needed!"
+    },
+    "step5": {
+      "title": "RPG Progression",
+      "body": "Earn XP and Gold for each completed mission. Level up to unlock new ranks, chapters, and badges. Spend Gold in the Shop for cosmetic items and boosts."
+    },
+    "dismiss": "Got it!",
+    "next": "Next",
+    "prev": "Back",
+    "skip": "Skip tutorial"
   }
 }
