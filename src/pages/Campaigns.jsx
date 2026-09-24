@@ -9,7 +9,8 @@ import ReactMarkdown from "react-markdown";
 import { Link } from "react-router-dom";
 import { missions, localizeMissions } from "../data/missions.js";
 import { campaigns, localizeCampaigns, getCampaignProgress } from "../data/campaigns.js";
-import { loadProgress } from "../systems/storage.js";
+import { loadProgress, loadProfile } from "../systems/storage.js";
+import { downloadCampaignCertificate } from "../components/CampaignCertificate.jsx";
 import { isMissionUnlocked } from "../systems/missionLoader.js";
 import { useTranslation } from "../i18n/useTranslation";
 
@@ -23,6 +24,7 @@ export default function Campaigns() {
   const [selectedCampaignId, setSelectedCampaignId] = useState(null);
   const [showLoreModal, setShowLoreModal] = useState(false);
   const [firstVisit, setFirstVisit] = useState(false);
+  const [certificateLoading, setCertificateLoading] = useState(null); // campaignId | null
 
 
   const localizedCampaigns = useMemo(
@@ -95,6 +97,30 @@ export default function Campaigns() {
   const closeModal = () => {
     setShowLoreModal(false);
     setFirstVisit(false);
+  };
+
+  const handleGetCertificate = async (campaign, e) => {
+    // Prevent bubbling to the card's onClick (which opens the detail view)
+    e.stopPropagation();
+    if (certificateLoading) return;
+
+    setCertificateLoading(campaign.id);
+    try {
+      const profile = loadProfile();
+      const dateLabel = new Date().toLocaleDateString(
+        language === "es" ? "es-ES" : "en-US",
+        { year: "numeric", month: "long", day: "numeric" },
+      );
+      await downloadCampaignCertificate({
+        campaignTitle: campaign.title,
+        playerName: profile.name,
+        missionCount: campaign.missionIds.length,
+        dateLabel,
+        t,
+      });
+    } finally {
+      setCertificateLoading(null);
+    }
   };
 
   const getLevelFromXP = (xp) => {
@@ -185,11 +211,29 @@ export default function Campaigns() {
                 )}
 
                 {completed && (
-                  <div className="campaign-status completed">
-
-                    <span className="sr-only">{t("campaigns.statusLabel")} </span>
-                    {t("campaigns.chapterComplete")}
-
+                  <div className="campaign-completed-row">
+                    <div className="campaign-status completed">
+                      <span className="sr-only">{t("campaigns.statusLabel")} </span>
+                      {t("campaigns.chapterComplete")}
+                    </div>
+                    <button
+                      type="button"
+                      className="btn-certificate"
+                      data-testid={`get-certificate-${campaign.id}`}
+                      aria-label={t("certificate.buttonAriaLabel", { title: campaign.title })}
+                      onClick={(e) => handleGetCertificate(campaign, e)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          handleGetCertificate(campaign, e);
+                        }
+                      }}
+                      disabled={certificateLoading === campaign.id}
+                    >
+                      {certificateLoading === campaign.id
+                        ? t("certificate.downloading")
+                        : t("certificate.button")}
+                    </button>
                   </div>
                 )}
               </div>

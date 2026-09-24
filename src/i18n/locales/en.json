@@ -232,11 +232,22 @@
     "chapterComplete": "✓ Chapter Complete!",
     "back": "← Back to Campaigns",
     "completeOf": "{{completed}}/{{total}} Complete",
+    "statusLabel": "Status:",
     "lore": {
       "iconLabel": "Chapter lore scroll",
       "modalTitle": "Chapter Introduction",
       "beginChapter": "Begin Chapter {{number}}"
     }
+  },
+  "certificate": {
+    "button": "🏅 Get Certificate",
+    "downloading": "Generating…",
+    "buttonAriaLabel": "Download completion certificate for {{title}}",
+    "ofCompletion": "Certificate of Completion",
+    "thisCertifies": "This certifies that",
+    "hasCompleted": "has successfully completed",
+    "missions": "{{count}} Missions Completed",
+    "completedOn": "Completed on {{date}}"
   },
   "missionMap": {
     "title": "Mission Map",

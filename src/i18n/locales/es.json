@@ -232,11 +232,22 @@
     "chapterComplete": "✓ ¡Capítulo completado!",
     "back": "← Volver a campañas",
     "completeOf": "{{completed}}/{{total}} completadas",
+    "statusLabel": "Estado:",
     "lore": {
       "iconLabel": "Pergamino de historia del capítulo",
       "modalTitle": "Introducción del capítulo",
       "beginChapter": "Comenzar capítulo {{number}}"
     }
+  },
+  "certificate": {
+    "button": "🏅 Obtener certificado",
+    "downloading": "Generando…",
+    "buttonAriaLabel": "Descargar certificado de finalización para {{title}}",
+    "ofCompletion": "Certificado de finalización",
+    "thisCertifies": "Esto certifica que",
+    "hasCompleted": "ha completado exitosamente",
+    "missions": "{{count}} misiones completadas",
+    "completedOn": "Completado el {{date}}"
   },
   "missionMap": {
     "title": "Mapa de misiones",
