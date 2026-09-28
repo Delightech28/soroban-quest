@@ -8,6 +8,7 @@
  * Draws a certificate onto an off-screen <canvas> and triggers a PNG download.
  *
  * @param {object} opts
+ * @param {string} [opts.campaignId]   - Campaign identifier (used as fallback for non-Latin titles)
  * @param {string} opts.campaignTitle  - Localized campaign title
  * @param {string} opts.playerName     - Player's profile name
  * @param {number} opts.missionCount   - Number of missions in the campaign
@@ -15,6 +16,7 @@
  * @param {Function} opts.t            - Translation function
  */
 export async function downloadCampaignCertificate({
+  campaignId,
   campaignTitle,
   playerName,
   missionCount,
@@ -165,13 +167,7 @@ export async function downloadCampaignCertificate({
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      // Sanitize campaign title for a safe filename
-      const safeName = campaignTitle
-        .replace(/[^a-z0-9\s-]/gi, "")
-        .trim()
-        .replace(/\s+/g, "-")
-        .toLowerCase();
-      a.download = `soroban-quest-certificate-${safeName}.png`;
+      a.download = getCertificateFilename(campaignTitle, campaignId);
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -182,6 +178,39 @@ export async function downloadCampaignCertificate({
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
+
+/**
+ * Generates a clean, filesystem-safe filename for the certificate.
+ * Normalizes accented characters and falls back to campaignId when non-Latin
+ * titles (e.g. Japanese or Chinese) collapse to an empty or very short slug.
+ *
+ * @param {string} [campaignTitle]
+ * @param {string} [campaignId]
+ * @returns {string}
+ */
+export function getCertificateFilename(campaignTitle, campaignId) {
+  const normalizedTitle = (campaignTitle || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+  let safeName = normalizedTitle
+    .replace(/[^a-z0-9\s-]/gi, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .toLowerCase();
+
+  // If sanitized title is empty or very short (< 3 chars, e.g. "1" from Japanese/Chinese titles),
+  // fall back to campaignId (e.g. "chapter-1-awakening")
+  if (!safeName || safeName.length < 3) {
+    safeName = (campaignId || "")
+      .replace(/[^a-z0-9\s-]/gi, "")
+      .trim()
+      .replace(/\s+/g, "-")
+      .toLowerCase() || "campaign";
+  }
+
+  return `soroban-quest-certificate-${safeName}.png`;
+}
 
 /**
  * Simple seeded PRNG (Mulberry32) so the star field is deterministic.

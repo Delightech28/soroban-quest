@@ -118,11 +118,20 @@ export default function Campaigns() {
     setCertificateLoading(campaign.id);
     try {
       const profile = loadProfile();
+      const localeMap: Record<string, string> = {
+        es: "es-ES",
+        fr: "fr-FR",
+        ja: "ja-JP",
+        "zh-CN": "zh-CN",
+        zh: "zh-CN",
+      };
+      const locale = localeMap[language] || "en-US";
       const dateLabel = new Date().toLocaleDateString(
-        language === "es" ? "es-ES" : "en-US",
+        locale,
         { year: "numeric", month: "long", day: "numeric" },
       );
       await downloadCampaignCertificate({
+        campaignId: campaign.id,
         campaignTitle: campaign.title,
         playerName: profile.name,
         missionCount: campaign.missionIds.length,
