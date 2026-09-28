@@ -283,31 +283,35 @@ function checkMissionSemantics(
   code: string,
   mission: unknown
 ): { diagnostics: Diagnostic[]; checkResults: unknown[] } {
-  const missionObj = mission as Record<string, unknown>;
-  if (!(missionObj?.checks as unknown[])?.length)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const missionObj = mission as any;
+  if (!missionObj?.checks?.length)
     return { diagnostics: [], checkResults: [] };
 
   const diagnostics: Diagnostic[] = [];
-  const { results } = validateCode(code, missionObj.checks as unknown[]);
+  // codeValidator.js has no type declarations — use any at the boundary.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { results } = validateCode(code, missionObj.checks) as any;
 
-  for (const r of results) {
-    if ((r as Record<string, unknown>).passed) continue;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  for (const r of results as any[]) {
+    if (r.passed) continue;
     // Best-effort anchor to a relevant line.
     let loc = { line: 1, column: 1, endColumn: 2 };
-    const check = (r as Record<string, unknown>).check as Record<string, unknown> || {};
-    if ((check as Record<string, unknown>).name) loc = locate(code, (check as Record<string, unknown>).name as string);
-    else if ((check as Record<string, unknown>).pattern) loc = locate(code, (check as Record<string, unknown>).pattern as string);
-    else if ((check as Record<string, unknown>).typeName) loc = locate(code, (check as Record<string, unknown>).typeName as string);
-    else if ((check as Record<string, unknown>).module) loc = locate(code, (check as Record<string, unknown>).module as string);
+    const check = r.check || {};
+    if (check.name) loc = locate(code, check.name as string);
+    else if (check.pattern) loc = locate(code, check.pattern as string);
+    else if (check.typeName) loc = locate(code, check.typeName as string);
+    else if (check.module) loc = locate(code, check.module as string);
 
     diagnostics.push(
       makeDiagnostic({
         severity: DiagnosticSeverity.Error,
-        message: ((r as Record<string, unknown>).message as string).replace(/^✗\s*/, ""),
+        message: (r.message as string).replace(/^✗\s*/, ""),
         line: loc.line,
         column: loc.column,
         endColumn: loc.endColumn,
-        code: `check::${((check as Record<string, unknown>).type as string) || "mission"}`,
+        code: `check::${(check.type as string) || "mission"}`,
       })
     );
   }
@@ -402,8 +406,10 @@ function finalize(
       stdout += `Exported functions: ${publicFns.join(", ")}\n`;
     }
 
-    if (mission?.expectedOutput != null) {
-      returnValue = String(mission.expectedOutput);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((mission as any)?.expectedOutput != null) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      returnValue = String((mission as any).expectedOutput);
       stdout += `Invocation result: ${returnValue}\n`;
     } else {
       returnValue = "ok";
