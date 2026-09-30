@@ -371,6 +371,16 @@
       "beginChapter": "チャプター {{number}} を開始"
     }
   },
+  "certificate": {
+    "button": "🏅 修了証を取得",
+    "downloading": "生成中…",
+    "buttonAriaLabel": "{{title}}の修了証をダウンロード",
+    "ofCompletion": "修了証書",
+    "thisCertifies": "以下を証明します",
+    "hasCompleted": "が正常に修了したことを証します",
+    "missions": "{{count}} ミッション完了",
+    "completedOn": "修了日: {{date}}"
+  },
   "missionMap": {
     "title": "ミッションマップ",
     "subtitle": "{{completed}} / {{total}} ミッション完了",

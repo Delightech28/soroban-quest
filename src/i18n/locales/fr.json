@@ -98,6 +98,10 @@
       "currentLevel": "Niveau {{level}} — {{rank}}",
       "nextMission": "Mission suivante",
       "continueFrom": "Continuer depuis {{title}}",
+      "dailyChallenge": "Défi du jour",
+      "dailyChallengeDescription": "Terminez la mission du jour pour obtenir un bonus de 25 XP !",
+      "dailyChallengeCompleted": "Terminé aujourd'hui !",
+      "dailyChallengeLink": "Commencer la mission",
       "recentActivity": "Activité récente",
       "viewAll": "Tout voir",
       "quickStats": "Statistiques rapides",
@@ -314,6 +318,16 @@
       "modalTitle": "Introduction du chapitre",
       "beginChapter": "Commencer le chapitre {{number}}"
     }
+  },
+  "certificate": {
+    "button": "🏅 Obtenir le certificat",
+    "downloading": "Génération en cours…",
+    "buttonAriaLabel": "Télécharger le certificat d'achèvement pour {{title}}",
+    "ofCompletion": "Certificat d'achèvement",
+    "thisCertifies": "Ceci certifie que",
+    "hasCompleted": "a terminé avec succès",
+    "missions": "{{count}} missions terminées",
+    "completedOn": "Terminé le {{date}}"
   },
   "missionMap": {
     "title": "Carte des missions",

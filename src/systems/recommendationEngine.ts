@@ -237,8 +237,11 @@ export function getRecommendedMission(
     };
   }
 
-  // Fallback if all else fails
-  const fallback = missionsList[0];
+  // Fallback if all else fails — prefer any uncompleted mission over one the
+  // player already finished (broken prerequisite chain guard).
+  const fallback = unlockedUncompleted[0]
+    ?? uncompleted[0]
+    ?? missionsList[0];
   return {
     missionId: fallback?.id || null,
     mission: fallback || null,
